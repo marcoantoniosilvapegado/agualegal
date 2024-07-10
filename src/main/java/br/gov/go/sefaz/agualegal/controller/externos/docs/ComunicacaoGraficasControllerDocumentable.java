@@ -28,7 +28,7 @@ public interface ComunicacaoGraficasControllerDocumentable {
         @ApiResponse(responseCode = "401", description = "Unauthorized: Falha na autenticação"),
         @ApiResponse(responseCode = "500", description = "Internal Server Error: Erro no servidor")
     })
-	public void consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto);
+	public ResponseEntity<RespostaPadrao>  consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto);
 	
 	
 	@Operation(summary = "Consulta situação gráfica", description = "Este serviço retorna a situação da gráfica, verificando se a mesma está autorizada a utilizar o sistema")

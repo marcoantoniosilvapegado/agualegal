@@ -31,9 +31,10 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 	}
 
 	@PostMapping(value = "/situacaoEnvasadora")
-	public void consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto) {
+	public ResponseEntity<RespostaPadrao>  consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto) {
 
-		this.comunicacaoGraficasService.verificaSituacaoEnvasora(dto);
+		RespostaPadrao resposta = this.comunicacaoGraficasService.verificaSituacaoEnvasora(dto);
+		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/situacaoGrafica")

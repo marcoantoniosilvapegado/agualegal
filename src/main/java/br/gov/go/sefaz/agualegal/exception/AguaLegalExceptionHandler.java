@@ -31,4 +31,10 @@ public class AguaLegalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
 	
+	@ExceptionHandler(EnvasadoraRegrasException.class)
+	public ResponseEntity<RespostaPadrao> validaSolicitacaoEnvasadora(EnvasadoraRegrasException e, HttpServletRequest request){
+		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), e.getCodigo(), false);		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+	
 }

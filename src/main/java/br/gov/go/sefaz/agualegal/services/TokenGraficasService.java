@@ -16,7 +16,7 @@ public class TokenGraficasService {
 		if(tokenGrafica.equals("Bearer 123")) {
 			throw new TokenGraficaInvalidoException(MENSAGENSPADRAO.GRAFICANAOENCONTRADA.getDesc(), 1);
 		}else if(tokenGrafica.equals("Bearer 234")) {
-			throw new TokenGraficaInvalidoException(MENSAGENSPADRAO.GRAFICANAOENCONTRADA.getDesc(), 2);
+			throw new TokenGraficaInvalidoException(MENSAGENSPADRAO.GRAFICANAOAUTORIZADA.getDesc(), 2);
 		}else {
 			padraoResposta = new RespostaPadrao(MENSAGENSPADRAO.GRAFICAENCONTRADA.getDesc(), 1, true);
 		}
