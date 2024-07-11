@@ -3,6 +3,7 @@ package br.gov.go.sefaz.agualegal.controller.externos;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,14 +31,16 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		this.tokenGraficasService = tokenGraficasService;
 	}
 
-	@PostMapping(value = "/situacaoEnvasadora")
+	@PostMapping(value = "/situacaoEnvasadora", consumes =  MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RespostaPadrao>  consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto) {
 
 		RespostaPadrao resposta = this.comunicacaoGraficasService.verificaSituacaoEnvasora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/situacaoGrafica")
+	@PostMapping(value = "/situacaoGrafica", consumes =  MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RespostaPadrao> consultaSituacaoGrafica(@RequestBody @Valid TokenRequestDTO dto) {
 		
 		RespostaPadrao resposta = this.tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
