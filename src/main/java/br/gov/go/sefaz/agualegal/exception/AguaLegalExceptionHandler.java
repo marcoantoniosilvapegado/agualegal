@@ -29,7 +29,7 @@ public class AguaLegalExceptionHandler {
 	@ExceptionHandler(TokenGraficaInvalidoException.class)
 	public ResponseEntity<RespostaPadrao> validaTokenGrafica(TokenGraficaInvalidoException e, HttpServletRequest request){
 		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), e.getCodigo(), false);		
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
 	}
 	
 	@ExceptionHandler(EnvasadoraRegrasException.class)

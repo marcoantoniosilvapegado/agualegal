@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.gov.go.sefaz.agualegal.controller.externos.docs.ComunicacaoGraficasControllerDocumentable;
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
+import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
+import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
 import br.gov.go.sefaz.agualegal.dto.TokenRequestDTO;
 import br.gov.go.sefaz.agualegal.services.ComunicacaoGraficasService;
@@ -30,7 +32,15 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		this.comunicacaoGraficasService = comunicacaoGraficasService;
 		this.tokenGraficasService = tokenGraficasService;
 	}
-
+	
+	@PostMapping(value = "/situacaoGrafica", consumes =  MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RespostaPadrao> consultaSituacaoGrafica(@RequestBody @Valid TokenRequestDTO dto) {
+		
+		RespostaPadrao resposta = this.tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
+		return new ResponseEntity<>(resposta, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/situacaoEnvasadora", consumes =  MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<RespostaPadrao>  consultaSituacaoEnvasadora(@RequestBody @Valid SituacaoEnvasadoraDTO dto) {
@@ -38,12 +48,14 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		RespostaPadrao resposta = this.comunicacaoGraficasService.verificaSituacaoEnvasora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
-
-	@PostMapping(value = "/situacaoGrafica", consumes =  MediaType.APPLICATION_JSON_VALUE, 
+	
+	@PostMapping(value = "/listarCampos", consumes =  MediaType.APPLICATION_JSON_VALUE, 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<RespostaPadrao> consultaSituacaoGrafica(@RequestBody @Valid TokenRequestDTO dto) {
+	public ResponseEntity<ListaCamposResponseDTO> listarCamposEnvasadora(@RequestBody @Valid ListaCamposRequestDTO dto){
 		
-		RespostaPadrao resposta = this.tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
+		ListaCamposResponseDTO resposta = 
+				this.comunicacaoGraficasService.listaCamposEnvasadora(dto);
+		
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
 }

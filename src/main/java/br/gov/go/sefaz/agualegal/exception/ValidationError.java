@@ -17,7 +17,7 @@ public class ValidationError extends StandardError{
 		// TODO Auto-generated constructor stub
 	}
 	
-	private List<FieldMessage> erros = new ArrayList<>();
+	private List<FieldMessage> erros = new ArrayList<FieldMessage>();
 
 	public List<FieldMessage> getErros() {
 		return erros;
