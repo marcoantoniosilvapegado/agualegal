@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.enums.MENSAGENSPADRAO;
 import br.gov.go.sefaz.agualegal.exception.EnvasadoraRegrasException;
 import br.gov.go.sefaz.agualegal.exception.TokenGraficaInvalidoException;
@@ -116,6 +119,12 @@ public class ComunicacaoGraficasService {
 		return list;
 		
 	}
-	
+
+
+	public RespostaPadrao solicitaCredenciamentoEnvasadora(@Valid SolicitacaoCredenciamentoDTO dto) {
+		tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
+		System.out.println(dto);
+		return null;
+	}
 	
 }

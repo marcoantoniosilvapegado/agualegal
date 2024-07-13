@@ -16,6 +16,7 @@ import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
 import br.gov.go.sefaz.agualegal.dto.TokenRequestDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.services.ComunicacaoGraficasService;
 import br.gov.go.sefaz.agualegal.services.TokenGraficasService;
 
@@ -58,4 +59,14 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
+	
+	@PostMapping(value = "/solicitarCredenciamento", consumes =  MediaType.APPLICATION_JSON_VALUE, 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora(@RequestBody @Valid SolicitacaoCredenciamentoDTO dto){
+		
+		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
+		return new ResponseEntity<>(resposta, HttpStatus.OK);
+	}
+	
+	
 }
