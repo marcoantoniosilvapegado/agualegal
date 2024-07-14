@@ -8,7 +8,7 @@ public enum MENSAGENSPADRAO {
 	ENVASADORANAOENCONTRADA(4, "Envasadora não encontrada"),
 	ENVASADORANAOAUTORIZADA(5, "A Envasadora não está autorizada a usar o sistema Água Legal"),
 	ENVASADORAAUTORIZADA(6, "A Envasadora autorizada a usar o sistema Água Legal"),
-	ENVASADORAEXCECAO(7, "Envasadora pertencente à lista de exceção, permissão concedida a solicitar credenciamento"),
+	ENVASADORALISTAEXCECAO(7, "Envasadora pertencente à lista de exceção, permissão concedida a solicitar credenciamento"),
 	ENVASADORANAOEXISTE(8, "Essa envasadora não existe no cadastro"),
 	ENVASADORASITFISCINATIVA(9, "Essa envasadora está com a situação fiscal inativa"),
 	ENVASADORAPERMITIDA(10, "Envasadora permitida a solicitar credenciamento"),
