@@ -3,6 +3,7 @@ package br.gov.go.sefaz.agualegal.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -14,14 +15,10 @@ public class SituacaoEnvasadoraDTO implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@NotEmpty(message = "É obrigatório informar a inscrição estadual!")
+	@NotBlank(message = "É obrigatório informar a inscrição estadual!")
 	private String inscricaoEstadual;
 	
-/*	@NotNull(message = "É obrigatório informar o tipo da água!")
-    @Pattern(regexp = "1|2|3", message = "O tipo da água deve ser 1(Adicionada de sais), 2(mineral) ou 3(ambas)!")
-	private String tipoAgua;*/
-	
-	@NotEmpty(message = "É obrigatório informar o token!")
+	@NotBlank(message = "É obrigatório informar o token!")
 	private String tokenGrafica;
 
 	public String getInscricaoEstadual() {
@@ -30,15 +27,7 @@ public class SituacaoEnvasadoraDTO implements Serializable{
 
 	public void setInscricaoEstadual(String inscricaoEstadual) {
 		this.inscricaoEstadual = inscricaoEstadual;
-	}
-
-	/*public String getTipoAgua() {
-		return tipoAgua;
-	}
-
-	public void setTipoAgua(String tipoAgua) {
-		this.tipoAgua = tipoAgua;
-	}*/
+	}	
 
 	public String getTokenGrafica() {
 		return tokenGrafica;

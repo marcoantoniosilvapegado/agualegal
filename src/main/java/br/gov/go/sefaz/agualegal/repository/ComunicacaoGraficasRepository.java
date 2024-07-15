@@ -6,6 +6,10 @@ import java.util.Map;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
+import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
+import br.gov.go.sefaz.agualegal.mapper.CampoAnaliseMapper;
+
 @Repository
 public class ComunicacaoGraficasRepository {
 
@@ -19,7 +23,7 @@ public class ComunicacaoGraficasRepository {
 	public Boolean verificaEnvasadoraListaExcecao(String inscricao) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(*) FROM IE_EXCECAO IEX where IEX.IE = ?");
-		
+
 		Integer count = jdbcTemplate.queryForObject(sql.toString(), new Object[] { inscricao }, Integer.class);
 		return count != null && count > 0;
 
@@ -67,10 +71,25 @@ public class ComunicacaoGraficasRepository {
 		return count != null && count > 0;
 	}
 
-	public void testaSQL() {
-		String sqlteste = "SELECT *FROM ATIVIDADE";
-		List<Map<String, Object>> queryForList = jdbcTemplate.queryForList(sqlteste);
-		System.out.println(queryForList);
+	public List<CampoResponseDTO> listaCamposEnvasadora(String tipoAgua) {
+		
+		StringBuilder sql = new StringBuilder();
+		
+		sql.append(" SELECT ");
+		sql.append(" C.NOMECAMPO ,  ");
+		sql.append(" C.DESCRICAOCAMPO , ");
+		sql.append(" C.MIDIARESPOSTA ,  ");
+		sql.append(" T.NOMETIPOANALISE  ");
+		sql.append(" ,C.DADOOBRIGATORIO  ");
+		sql.append(" FROM CAMPOS C, TIPOANALISE T ");
+		sql.append(" WHERE C.DATAFIM  IS NULL  ");
+		sql.append(" AND C.IDTIPOANALISE  = T.ID  ");
+		
+		if(tipoAgua.equals("1")) {
+			sql.append(" AND C.IDTIPOANALISE <> 3");
+		}		
+
+		 return jdbcTemplate.query(sql.toString(), new CampoAnaliseMapper());
 	}
 
 }

@@ -76,12 +76,12 @@ public class ComunicacaoGraficasService {
 
 		tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
 
-		List<CampoResponseDTO> listaCampos = this.mockCamposEnvasadora(dto.getTipoAgua());
+		List<CampoResponseDTO> listaCampos = comunicacaoGraficasRepository.listaCamposEnvasadora(dto.getTipoAgua());
 
 		return new ListaCamposResponseDTO(listaCampos);
 	}
 
-	private List<CampoResponseDTO> mockCamposEnvasadora(String tipoAgua) {
+	/*private List<CampoResponseDTO> mockCamposEnvasadora(String tipoAgua) {
 
 		CampoResponseDTO campo1 = new CampoResponseDTO("CNPJ", "CNPJ da empresa envasadora", "Análise Cadastral",
 				"Texto", true);
@@ -156,7 +156,7 @@ public class ComunicacaoGraficasService {
 		return list;
 
 	}
-
+*/
 	public RespostaPadrao solicitaCredenciamentoEnvasadora(@Valid SolicitacaoCredenciamentoDTO dto) {
 		tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
 		System.out.println(dto);

@@ -12,12 +12,10 @@ public class CampoDTO implements Serializable {
 	@NotBlank(message = "Favor informar o nome do campo enviado!")
 	private String nomeCampo;
 
-	@NotBlank(message = "Favor informar o tipo do campo enviado!")
-	@NotNull(message = "Favor informar o tipo do campo enviado")
+	@NotBlank(message = "Favor informar o tipo do campo enviado!")	
 	private String tipoCampo;
 
 	@NotBlank(message = "Favor informar o conteudo do campo enviado")
-	@NotNull(message = "Favor informar o conteudo do campo enviado")
 	private String conteudoCampo;
 
 	public CampoDTO() {

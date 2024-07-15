@@ -36,7 +36,6 @@ public class ProdutoSolicitacaoDTO implements Serializable {
 
 	public ProdutoSolicitacaoDTO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public ProdutoSolicitacaoDTO(
