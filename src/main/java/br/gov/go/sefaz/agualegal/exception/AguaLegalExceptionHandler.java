@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,12 @@ public class AguaLegalExceptionHandler {
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
 	public ResponseEntity<RespostaPadrao> validaInformacoesEnviadasCorpo(HttpMediaTypeNotSupportedException e, HttpServletRequest request){
 		RespostaPadrao erro = new RespostaPadrao("Verifique o formato corpo da mensagem enviado", 400, false);		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+	
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<RespostaPadrao> metodoNaoSuportado(HttpRequestMethodNotSupportedException e, HttpServletRequest request){
+		RespostaPadrao erro = new RespostaPadrao("Método não suportado!", 400, false);		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
 	

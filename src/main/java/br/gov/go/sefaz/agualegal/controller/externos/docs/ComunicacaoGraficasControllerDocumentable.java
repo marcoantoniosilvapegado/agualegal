@@ -1,17 +1,21 @@
 package br.gov.go.sefaz.agualegal.controller.externos.docs;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
 import br.gov.go.sefaz.agualegal.dto.TokenRequestDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.ArquivoDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.CampoDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoSolicitacaoDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.*;
@@ -61,10 +65,11 @@ public interface ComunicacaoGraficasControllerDocumentable {
 			@Parameter(name = "inscricaoEstadual", description = "Inscrição estadual da empresa envasadora", required = true, schema = @Schema(type = "string")),
 			@Parameter(name = "tokenGrafica", description = "Token de autenticação fornecido pela gráfica", required = true, schema = @Schema(type = "string")),
 			@Parameter(name = "tipoAgua", description = "Tipo de água: 1 - Adicionada de Sais; 2 - Mineral; 3 - Ambas", required = true, schema = @Schema(type = "string")),
-			@Parameter(name = "listaCampos", description = "Informações solicitadas à empresa envasadora. Em caso de a informação ser referente a um arquivo(PDF, IMAGEM) deve ser enviado o base64 referente a esse arquivo", required = true, schema = @Schema(implementation = CampoDTO.class)),
-			@Parameter(name = "listaProdutos", description = "Lista com informações referentes aos produtos oferecidos pela empresa envasadora. No caso dos campos imagemRótulo e fotoRecipiente, devem ser enviados os base64 referentes à imagem", required = true, schema = @Schema(implementation = ProdutoSolicitacaoDTO.class)) })
+			@Parameter(name = "listaCampos", description = "Lista de informações textuais solicitadas à empresa envasadora. ", required = true, schema = @Schema(implementation = CampoDTO.class)),
+			@Parameter(name = "listaArquivos", description = "Lista de arquivos (PDF, IMAGEM) solicitados à gráfica. ", required = true, schema = @Schema(implementation = ArquivoDTO.class)),
+			@Parameter(name = "listaProdutos", description = "Lista com informações referentes aos produtos oferecidos pela empresa envasadora. ", required = true, schema = @Schema(implementation = ProdutoDTO.class)) })
 	@ApiResponses(value = {
-			@ApiResponse(responseCode = "200", description = "OK: Solicitação de credenciamento efetuada com sucesso!", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ListaCamposResponseDTO.class))),
+			@ApiResponse(responseCode = "200", description = "OK: Solicitação de credenciamento efetuada com sucesso!", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RespostaPadrao.class))),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Houve problema na solicitação de credenciamento!", content = @Content(mediaType = "application/json")),
 			@ApiResponse(responseCode = "401", description = "Unauthorized: Gráfica não encontrada ou não autorizada a utilizar o sistema!", content = @Content(mediaType = "application/json")),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error: Erro no servidor", content = @Content(mediaType = "application/json")) })

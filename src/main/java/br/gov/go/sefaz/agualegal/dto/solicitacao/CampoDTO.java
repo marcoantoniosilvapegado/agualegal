@@ -3,7 +3,6 @@ package br.gov.go.sefaz.agualegal.dto.solicitacao;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class CampoDTO implements Serializable {
 
