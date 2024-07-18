@@ -13,11 +13,11 @@ public class CampoAnaliseMapper implements RowMapper<CampoResponseDTO>{
 	public CampoResponseDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
 		CampoResponseDTO dto = new CampoResponseDTO();
 		
-		dto.setNomeCampo(rs.getString("NOMECAMPO"));
-		dto.setDescricaoCampo(rs.getString("DESCRICAOCAMPO"));
-		dto.setTipoAnalise(rs.getString("NOMETIPOANALISE"));
-		dto.setTipoFormato(rs.getString("MIDIARESPOSTA"));
-		dto.setDadoObrigatorio(rs.getInt("DADOOBRIGATORIO")==1);
+		dto.setNomeCampo(rs.getString("NOME_CAMPO"));
+		dto.setDescricaoCampo(rs.getString("DESCRICAO_CAMPO"));
+		dto.setTipoAnalise(rs.getString("NOME_TIPO_ANALISE"));
+		dto.setTipoFormato(rs.getString("MIDIA_RESPOSTA"));
+		dto.setDadoObrigatorio(rs.getInt("DADO_OBRIGATORIO")==1);
 		
 		return dto;
 	}

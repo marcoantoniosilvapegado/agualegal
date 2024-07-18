@@ -22,7 +22,7 @@ public class ComunicacaoGraficasRepository {
 	@SuppressWarnings("deprecation")
 	public Boolean verificaEnvasadoraListaExcecao(String inscricao) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT COUNT(*) FROM IE_EXCECAO IEX where IEX.IE = ?");
+		sql.append("SELECT COUNT(*) FROM TAB_IE_EXCECAO IEX where IEX.IE = ? AND IEX.DATA_FIM IS NULL");
 
 		Integer count = jdbcTemplate.queryForObject(sql.toString(), new Object[] { inscricao }, Integer.class);
 		return count != null && count > 0;
@@ -76,17 +76,17 @@ public class ComunicacaoGraficasRepository {
 		StringBuilder sql = new StringBuilder();
 		
 		sql.append(" SELECT ");
-		sql.append(" C.NOMECAMPO ,  ");
-		sql.append(" C.DESCRICAOCAMPO , ");
-		sql.append(" C.MIDIARESPOSTA ,  ");
-		sql.append(" T.NOMETIPOANALISE  ");
-		sql.append(" ,C.DADOOBRIGATORIO  ");
-		sql.append(" FROM CAMPOS C, TIPOANALISE T ");
-		sql.append(" WHERE C.DATAFIM  IS NULL  ");
-		sql.append(" AND C.IDTIPOANALISE  = T.ID  ");
+		sql.append(" lc.NOME_CAMPO ,");
+		sql.append(" lc.DESCRICAO_CAMPO ,");
+		sql.append(" lc.MIDIA_RESPOSTA , ");
+		sql.append(" ta.NOME_TIPO_ANALISE, ");
+	    sql.append(" lc.DADO_OBRIGATORIO  ");
+		sql.append(" FROM TAB_LISTA_CAMPOS  lc, TAB_TIPO_ANALISE ta");
+		sql.append(" WHERE lc.DATA_FIM  IS NULL  ");
+		sql.append(" AND lc.ID_TIPO_ANALISE  = ta.ID_TIPO_ANALISE"); 		
 		
 		if(tipoAgua.equals("1")) {
-			sql.append(" AND C.IDTIPOANALISE <> 3");
+			sql.append(" AND ta.ID_TIPO_ANALISE <> 3");
 		}		
 
 		 return jdbcTemplate.query(sql.toString(), new CampoAnaliseMapper());
