@@ -2,33 +2,40 @@ package br.gov.go.sefaz.agualegal.repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.mapper.CampoAnaliseMapper;
+import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 
 @Repository
 public class ComunicacaoGraficasRepository {
 
 	private JdbcTemplate jdbcTemplate;
 
+	@Autowired
+	IeExcecaoRepository ieExcecaoRepository;
+	
+	@Autowired
+	CampoFormularioRepository campoFormularioRepository;
+
 	public ComunicacaoGraficasRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	@SuppressWarnings("deprecation")
 	public Boolean verificaEnvasadoraListaExcecao(String inscricao) {
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT COUNT(*) FROM TAB_IE_EXCECAO IEX where IEX.IE = ? AND IEX.DATA_FIM IS NULL");
+		this.ieExcecaoRepository.findExceptionByIE(Long.parseLong(inscricao));
 
-		Integer count = jdbcTemplate.queryForObject(sql.toString(), new Object[] { inscricao }, Integer.class);
-		return count != null && count > 0;
-
+		Integer count = this.ieExcecaoRepository.findExceptionByIE(Long.parseLong(inscricao));//jdbcTemplate.queryForObject(sql.toString(), new Object[] { inscricao }, Integer.class);
+		return count != null && count > 0;		
 	}
-
+	
 	@SuppressWarnings("deprecation")
 	public Boolean verificaEnvasadoraExisteCadastro(String IE) {
 		StringBuilder sql = new StringBuilder();
@@ -73,23 +80,13 @@ public class ComunicacaoGraficasRepository {
 
 	public List<CampoResponseDTO> listaCamposEnvasadora(String tipoAgua) {
 		
-		StringBuilder sql = new StringBuilder();
+		List<CampoFormulario> listaCampos 
+				= this.campoFormularioRepository.findCamposFormulario(tipoAgua)
+				.get();
 		
-		sql.append(" SELECT ");
-		sql.append(" lc.NOME_CAMPO ,");
-		sql.append(" lc.DESCRICAO_CAMPO ,");
-		sql.append(" lc.MIDIA_RESPOSTA , ");
-		sql.append(" ta.NOME_TIPO_ANALISE, ");
-	    sql.append(" lc.DADO_OBRIGATORIO  ");
-		sql.append(" FROM TAB_LISTA_CAMPOS  lc, TAB_TIPO_ANALISE ta");
-		sql.append(" WHERE lc.DATA_FIM  IS NULL  ");
-		sql.append(" AND lc.ID_TIPO_ANALISE  = ta.ID_TIPO_ANALISE"); 		
-		
-		if(tipoAgua.equals("1")) {
-			sql.append(" AND ta.ID_TIPO_ANALISE <> 3");
-		}		
+		return listaCampos.stream().map(item -> new CampoResponseDTO(item))
+		.collect(Collectors.toList());
 
-		 return jdbcTemplate.query(sql.toString(), new CampoAnaliseMapper());
 	}
 
 }

@@ -75,9 +75,8 @@ public class ComunicacaoGraficasService {
 	}
 
 	public ListaCamposResponseDTO listaCamposEnvasadora(ListaCamposRequestDTO dto) {
-
+		
 		tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
-
 		List<CampoResponseDTO> listaCampos = comunicacaoGraficasRepository.listaCamposEnvasadora(dto.getTipoAgua());
 
 		return new ListaCamposResponseDTO(listaCampos);

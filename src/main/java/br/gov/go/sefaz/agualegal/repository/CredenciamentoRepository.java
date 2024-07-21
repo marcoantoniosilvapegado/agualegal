@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 
 @Repository
-public interface CredenciamentoRepository extends JpaRepository<Credenciamento, Long>{
+public interface CredenciamentoRepository extends JpaRepository<Credenciamento, Long>
+	{
 	
 }	

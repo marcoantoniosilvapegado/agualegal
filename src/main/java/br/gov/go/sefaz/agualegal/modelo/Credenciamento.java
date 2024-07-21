@@ -1,12 +1,16 @@
 package br.gov.go.sefaz.agualegal.modelo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -44,6 +48,17 @@ public class Credenciamento {
 	@Temporal(TemporalType.DATE)
 	private Date dataFim;
 
+	@OneToMany(mappedBy = "credenciamento", cascade = CascadeType.ALL)
+	private List<PedidoCredenciamento> pedidos = new ArrayList<>();
+
+	public void addPedido(PedidoCredenciamento pedido) {
+		pedidos.add(pedido);
+		pedido.setCredenciamento(this);
+	}
+
+	public Credenciamento() {
+		// TODO Auto-generated constructor stub
+	}
 	// Getters and Setters
 
 	public Long getId() {
@@ -108,6 +123,14 @@ public class Credenciamento {
 
 	public void setDataFim(Date dataFim) {
 		this.dataFim = dataFim;
+	}
+
+	public List<PedidoCredenciamento> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<PedidoCredenciamento> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	@Override

@@ -3,13 +3,15 @@ package br.gov.go.sefaz.agualegal.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
+import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
+
 public class CampoResponseDTO implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String nomeCampo;
 	private String descricaoCampo;
 	private String tipoAnalise;
@@ -29,6 +31,16 @@ public class CampoResponseDTO implements Serializable {
 		this.tipoAnalise = tipoAnalise;
 		this.tipoFormato = tipoFormato;
 		this.dadoObrigatorio = dadoObrigatorio;
+	}
+
+	public CampoResponseDTO(CampoFormulario campo) {
+		
+		this.dadoObrigatorio = campo.getCampoObrigatorio().equals("S");
+		this.descricaoCampo = campo.getDescricaoCriterio();
+		this.nomeCampo = campo.getNomeCriterio();
+		this.tipoAnalise = campo.getTipoAnalise().getTipoAnalise();
+		this.tipoFormato = campo.getTipoResposta().getTipoResposta();
+		
 	}
 
 	public String getNomeCampo() {
