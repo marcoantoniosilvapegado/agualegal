@@ -39,6 +39,12 @@ public class AguaLegalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
 	
+	@ExceptionHandler(SolicitacaoCredenciamentoException.class)
+	public ResponseEntity<RespostaPadrao> solicitacaoCredenciamento(SolicitacaoCredenciamentoException e, HttpServletRequest request){
+		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), e.getCodigo(), false);		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+	
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
 	public ResponseEntity<RespostaPadrao> validaInformacoesEnviadasCorpo(HttpMediaTypeNotSupportedException e, HttpServletRequest request){
 		RespostaPadrao erro = new RespostaPadrao("Verifique o formato corpo da mensagem enviado", 400, false);		

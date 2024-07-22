@@ -13,6 +13,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoDTO;
+
 @Entity
 @Table(name = "TAB_PEDIDO_PRODUTOS")
 public class PedidoProduto {
@@ -45,7 +47,19 @@ public class PedidoProduto {
 	@Lob
 	@Column(name = "imagem_recipiente", nullable = false)
 	private byte[] imagemRecipiente;
-
+	
+	public PedidoProduto(ProdutoDTO dto, PedidoCredenciamento pedidoCredenciamento) {
+		this.pedidoCredenciamento = pedidoCredenciamento;
+		
+		this.descricaoMarca = dto.getDescricaoMarca();
+		this.tipoEmbalagem = dto.getTipoEmbalagem();
+		this.tipoProduto = dto.getTipo();
+		this.volume =  Integer.parseInt(dto.getVolume());
+		
+		this.imagemRecipiente = dto.getFotoRecipienteBase();
+		this.imagemRotulo = dto.getImagemRotuloBase();
+	}
+	
 	public PedidoProduto() {
 		
 	}

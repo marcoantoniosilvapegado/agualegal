@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import br.gov.go.sefaz.agualegal.dto.solicitacao.CampoDTO;
+
 @Entity
 @Table(name = "TAB_PEDIDO_CAMPO_FORM")
 public class PedidoCampoForm {
@@ -43,7 +45,7 @@ public class PedidoCampoForm {
 	@Column(name = "data_vencimento")
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;
-
+	
 	public PedidoCampoForm() {
 
 	}

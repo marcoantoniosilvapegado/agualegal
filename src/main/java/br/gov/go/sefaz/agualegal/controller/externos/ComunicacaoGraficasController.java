@@ -1,29 +1,26 @@
 package br.gov.go.sefaz.agualegal.controller.externos;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.gov.go.sefaz.agualegal.controller.externos.docs.ComunicacaoGraficasControllerDocumentable;
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
-import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
+import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
 import br.gov.go.sefaz.agualegal.dto.TokenRequestDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.ArquivoDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.services.ComunicacaoGraficasService;
 import br.gov.go.sefaz.agualegal.services.TokenGraficasService;
+import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 @RestController
 @RequestMapping(value = "/api")
@@ -64,11 +61,16 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 
 	@PostMapping(value = "/solicitarCredenciamento")
 	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora(
-			@RequestBody @Valid SolicitacaoCredenciamentoDTO dto
-			) {		
+			@RequestBody @Valid SolicitacaoCredenciamentoDTO dto) {
 		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
-	
-	
+
+	/*@GetMapping(value = "/teste")
+	public ResponseEntity<RespostaPadrao> teste() {
+		SolicitacaoCredenciamentoDTO dto = UtilsAguaLegal.mockTemporarioSolicitacaoDTO();
+		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
+		return new ResponseEntity<>(resposta, HttpStatus.OK);
+	}*/
+
 }

@@ -12,7 +12,8 @@ public enum MENSAGENSPADRAO {
 	ENVASADORANAOEXISTE(8, "Essa envasadora não existe no cadastro"),
 	ENVASADORASITFISCINATIVA(9, "Essa envasadora está com a situação fiscal inativa"),
 	ENVASADORAPERMITIDA(10, "Envasadora permitida a solicitar credenciamento"),
-	ENVASADORANAOINCLUIDACNAE(11, "Essa envasadora não está incluída na classificação econômica para fornecedora de água")
+	ENVASADORANAOINCLUIDACNAE(11, "Essa envasadora não está incluída na classificação econômica para fornecedora de água"),
+	CAMPONAOENCONTRADO(12, "Campo não encontrado")
 	;
 
 	private int cod;

@@ -43,6 +43,11 @@ public class SolicitacaoCredenciamentoDTO implements Serializable {
 	@Valid
 	private List<ProdutoDTO> listaProdutos = new ArrayList<ProdutoDTO>();
 
+	@NotBlank(message = "É obrigatório informar o nome da gráfica!")
+	private String nomeGrafica;
+	@NotBlank(message = "É obrigatório informar o cnpj da gráfica!")
+	private String cnpjGrafica;
+
 	public SolicitacaoCredenciamentoDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -53,7 +58,9 @@ public class SolicitacaoCredenciamentoDTO implements Serializable {
 			@NotBlank(message = "É obrigatório informar o tipo da água!") @Pattern(regexp = "1|2|3", message = "O tipo da água deve ser 1(Adicionada de sais), 2(mineral) ou 3(ambas)!") String tipoAgua,
 			@NotNull(message = "É obrigatório informar a lista de campos!") @NotEmpty(message = "A lista de campos informada está vazia!") @Valid List<CampoDTO> listaCampos,
 			@NotNull(message = "É obrigatório informar a lista de arquivos!") @NotEmpty(message = "A lista de arquivos informada está vazia!") @Valid List<ArquivoDTO> listaArquivos,
-			@NotNull(message = "É obrigatório informar a lista de produtos!") @NotEmpty(message = "A lista de produtos informada está vazia!") @Valid List<ProdutoDTO> listaProdutos) {
+			@NotNull(message = "É obrigatório informar a lista de produtos!") @NotEmpty(message = "A lista de produtos informada está vazia!") @Valid List<ProdutoDTO> listaProdutos,
+			@NotBlank(message = "É obrigatório informar o nome da gráfica!") String nomeGrafica,
+			@NotBlank(message = "É obrigatório informar o cnpj da gráfica!") String cnpjGrafica) {
 		super();
 		this.tokenGrafica = tokenGrafica;
 		this.inscricaoEstadual = inscricaoEstadual;
@@ -61,6 +68,8 @@ public class SolicitacaoCredenciamentoDTO implements Serializable {
 		this.listaCampos = listaCampos;
 		this.listaArquivos = listaArquivos;
 		this.listaProdutos = listaProdutos;
+		this.nomeGrafica = nomeGrafica;
+		this.cnpjGrafica = cnpjGrafica;
 	}
 
 	public String getTokenGrafica() {
@@ -111,9 +120,34 @@ public class SolicitacaoCredenciamentoDTO implements Serializable {
 		this.listaProdutos = listaProdutos;
 	}
 
+	public String getNomeGrafica() {
+		return nomeGrafica;
+	}
+
+	public void setNomeGrafica(String nomeGrafica) {
+		this.nomeGrafica = nomeGrafica;
+	}
+
+	public String getCnpjGrafica() {
+		return cnpjGrafica;
+	}
+
+	public void setCnpjGrafica(String cnpjGrafica) {
+		this.cnpjGrafica = cnpjGrafica;
+	}
+
+	@Override
+	public String toString() {
+		return "SolicitacaoCredenciamentoDTO [tokenGrafica=" + tokenGrafica + ", inscricaoEstadual=" + inscricaoEstadual
+				+ ", tipoAgua=" + tipoAgua + ", listaCampos=" + listaCampos + ", listaArquivos=" + listaArquivos
+				+ ", listaProdutos=" + listaProdutos + ", nomeGrafica=" + nomeGrafica + ", cnpjGrafica=" + cnpjGrafica
+				+ "]";
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(inscricaoEstadual, listaArquivos, listaCampos, listaProdutos, tipoAgua, tokenGrafica);
+		return Objects.hash(cnpjGrafica, inscricaoEstadual, listaArquivos, listaCampos, listaProdutos, nomeGrafica,
+				tipoAgua, tokenGrafica);
 	}
 
 	@Override
@@ -125,17 +159,11 @@ public class SolicitacaoCredenciamentoDTO implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		SolicitacaoCredenciamentoDTO other = (SolicitacaoCredenciamentoDTO) obj;
-		return Objects.equals(inscricaoEstadual, other.inscricaoEstadual)
+		return Objects.equals(cnpjGrafica, other.cnpjGrafica)
+				&& Objects.equals(inscricaoEstadual, other.inscricaoEstadual)
 				&& Objects.equals(listaArquivos, other.listaArquivos) && Objects.equals(listaCampos, other.listaCampos)
-				&& Objects.equals(listaProdutos, other.listaProdutos) && Objects.equals(tipoAgua, other.tipoAgua)
-				&& Objects.equals(tokenGrafica, other.tokenGrafica);
-	}
-
-	@Override
-	public String toString() {
-		return "SolicitacaoCredenciamentoDTO [tokenGrafica=" + tokenGrafica + ", inscricaoEstadual=" + inscricaoEstadual
-				+ ", tipoAgua=" + tipoAgua + ", listaCampos=" + listaCampos + ", listaArquivos=" + listaArquivos
-				+ ", listaProdutos=" + listaProdutos + "]";
+				&& Objects.equals(listaProdutos, other.listaProdutos) && Objects.equals(nomeGrafica, other.nomeGrafica)
+				&& Objects.equals(tipoAgua, other.tipoAgua) && Objects.equals(tokenGrafica, other.tokenGrafica);
 	}
 
 }

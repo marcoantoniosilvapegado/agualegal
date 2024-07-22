@@ -31,7 +31,7 @@ import br.gov.go.sefaz.agualegal.repository.TipoAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoRespostaRepository;
 
 @SpringBootApplication
-public class AgualegalApplication implements CommandLineRunner
+public class AgualegalApplication //implements CommandLineRunner
 {
 
 	@Autowired
@@ -54,7 +54,7 @@ public class AgualegalApplication implements CommandLineRunner
 	}
 	
     @Transactional
-	public void run(String... args) throws Exception {
+	public void run5(String... args) throws Exception {
 		
 		Credenciamento cred = this.repository.findById(36L).get();
 		System.out.println(cred.toString());
@@ -70,7 +70,7 @@ public class AgualegalApplication implements CommandLineRunner
 		
 	}
 	
-	public void run5(String... args) throws Exception {
+	public void run22(String... args) throws Exception {
 		
 		Credenciamento credenciamento = new Credenciamento();
 		credenciamento.setCnpj("22502602000180");		
@@ -288,6 +288,15 @@ public class AgualegalApplication implements CommandLineRunner
         calendar.add(Calendar.DAY_OF_MONTH, days);
         return calendar.getTime();
     }
+
+	//@Override
+	public void run(String... args) throws Exception {
+		Optional<CampoFormulario> teste = campoFormularioRepository.findCampoFormularioByNomeCriterio("Inscrição Estadual");
+		if(!teste.isEmpty()) {
+			System.out.println(teste);
+		}
+		
+	}
 
 
 	
