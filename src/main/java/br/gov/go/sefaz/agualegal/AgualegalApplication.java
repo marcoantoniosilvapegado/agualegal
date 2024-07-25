@@ -17,6 +17,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCampoForm;
@@ -29,6 +30,9 @@ import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.IeExcecaoRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoRespostaRepository;
+import br.gov.go.sefaz.agualegal.services.ComunicacaoGraficasService;
+import br.gov.go.sefaz.agualegal.utils.MockTestes;
+import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 @SpringBootApplication
 public class AgualegalApplication //implements CommandLineRunner
@@ -49,8 +53,35 @@ public class AgualegalApplication //implements CommandLineRunner
 	@Autowired
 	CampoFormularioRepository campoFormularioRepository;
 	
+	@Autowired
+	ComunicacaoGraficasService service;
+	
+	//@Override
+	public void run(String[] args) {
+		
+
+	
+	}
 	public static void main(String[] args) {
 		SpringApplication.run(AgualegalApplication.class, args);				
+	}
+	
+	//@Override
+	public void run_testeprod(String... args) throws Exception {
+		SolicitacaoCredenciamentoDTO dtoErros = MockTestes.solicitacaoCredenciamentoComErrosProdutos();
+		
+		try {
+			service.solicitaCredenciamentoEnvasadora(dtoErros);
+		} catch (Exception e) {
+			System.out.println(e.toString());
+			System.out.println(e.getLocalizedMessage());
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			System.out.println(e.getStackTrace());
+			//e.getMessage();
+			//e.printStackTrace();
+		}
+		
 	}
 	
     @Transactional
@@ -289,14 +320,35 @@ public class AgualegalApplication //implements CommandLineRunner
         return calendar.getTime();
     }
 
+	public void run_image(String... args) throws Exception {
+		System.out.println(
+				UtilsAguaLegal.verificaTamanhoImagemValido(
+						UtilsAguaLegal.carregaBytes("C:\\Users\\marco.pegado\\Desktop\\arqs\\tamanho1.png"))
+				);
+		;
+		System.out.println(
+				UtilsAguaLegal.verificaTamanhoImagemValido(
+						UtilsAguaLegal.carregaBytes("C:\\Users\\marco.pegado\\Desktop\\arqs\\tamanho2.png"))
+				);
+		;
+		
+	//	System.out.println(MockTestes.testaImagem("C:\\Users\\marco.pegado\\Desktop\\arqs\\galao10.jpg"));
+		//System.out.println(MockTestes.testaImagem("C:\\Users\\marco.pegado\\Desktop\\arqs\\teste.pdf"));
+	//	SolicitacaoCredenciamentoDTO dto = MockTestes.solicitacaoCredenciamento1();
+		//this.service.solicitaCredenciamentoEnvasadora(dto);		
+		
+	}
+
+
+
 	//@Override
-	public void run(String... args) throws Exception {
+/*	public void run(String... args) throws Exception {
 		Optional<CampoFormulario> teste = campoFormularioRepository.findCampoFormularioByNomeCriterio("Inscrição Estadual");
 		if(!teste.isEmpty()) {
 			System.out.println(teste);
 		}
 		
-	}
+	}*/
 
 
 	

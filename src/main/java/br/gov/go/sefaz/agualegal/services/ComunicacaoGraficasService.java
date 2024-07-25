@@ -39,15 +39,19 @@ public class ComunicacaoGraficasService {
 	private CampoFormularioRepository campoFormularioRepository;
 	
 	private CredenciamentoRepository credenciamentoRepository;
+	
+	private ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento;
 
 	public ComunicacaoGraficasService(TokenGraficasService tokenGraficasService,
 			ComunicacaoGraficasRepository comunicacaoGraficasRepository,
 			CampoFormularioRepository campoFormularioRepository,
-			CredenciamentoRepository credenciamentoRepository) {
+			CredenciamentoRepository credenciamentoRepository, 
+			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento) {
 		this.tokenGraficasService = tokenGraficasService;
 		this.comunicacaoGraficasRepository = comunicacaoGraficasRepository;
 		this.campoFormularioRepository = campoFormularioRepository;
 		this.credenciamentoRepository = credenciamentoRepository;
+		this.validacaoSolicitacaoCredenciamento = validacaoSolicitacaoCredenciamento;
 	}
 
 	public RespostaPadrao verificaSituacaoEnvasora(SituacaoEnvasadoraDTO dto) {
@@ -102,7 +106,8 @@ public class ComunicacaoGraficasService {
 	public RespostaPadrao solicitaCredenciamentoEnvasadora(SolicitacaoCredenciamentoDTO dto) {
 		//tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
 
-		/*Pendente - será implementada camada de validação*/
+		/*Será feita validação nos campos recebidos. Caso validado, os dados serão persistidos no banco*/
+		validacaoSolicitacaoCredenciamento.validacaoSolicitacaoCredenciamento(dto);
 		
 		/*Salvar credenciamento*/
 		Credenciamento credenciamento = this.salvaSolicitacaoCredenciamento(dto);

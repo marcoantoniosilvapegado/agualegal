@@ -14,5 +14,11 @@ public interface CampoFormularioRepository extends JpaRepository<CampoFormulario
 			+ "AND ( :tipoAgua <> '1'  or (:tipoAgua = '1' and c.tipoAnalise.id <>3))")
 	Optional<List<CampoFormulario>> findCamposFormulario(String tipoAgua);
 	
+	@Query(value = "select  c from CampoFormulario c where c.disponibilizarCampo = 'S' "
+			+ " and c.campoObrigatorio = 'S' and c.status = 'A' "
+			+ "and ( :tipoAgua <> '1'  or (:tipoAgua = '1' and c.tipoAnalise.id <>3))")
+	Optional<List<CampoFormulario>> findCamposObrigatoriosFormulario(String tipoAgua);
+	
+	
 	Optional<CampoFormulario> findCampoFormularioByNomeCriterio(String nomeCriterio);
 }

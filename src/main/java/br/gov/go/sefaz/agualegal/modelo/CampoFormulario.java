@@ -52,6 +52,8 @@ public class CampoFormulario {
 
 	@Column(name = "status", nullable = false, length = 1)
 	private String status;
+	
+	
 
 	public CampoFormulario() {
 

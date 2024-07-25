@@ -1,5 +1,7 @@
 package br.gov.go.sefaz.agualegal.exception;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -56,5 +58,11 @@ public class AguaLegalExceptionHandler {
 		RespostaPadrao erro = new RespostaPadrao("Método não suportado!", 400, false);		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
+	
+	@ExceptionHandler(ValidacaoSolicitacaoException.class)
+	public ResponseEntity<List<FieldMessage>> validaSolicitacao(ValidacaoSolicitacaoException e){		
+		 List<FieldMessage> erros = e.getValidationErrors().getErros();		
+		 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erros);		
+	}	
 	
 }

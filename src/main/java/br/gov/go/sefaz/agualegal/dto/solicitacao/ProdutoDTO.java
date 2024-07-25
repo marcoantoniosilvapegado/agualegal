@@ -18,22 +18,16 @@ public class ProdutoDTO implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@NotBlank(message = "É obrigatório informar a descrição da marca!")
 	private String descricaoMarca;
 
-	@NotBlank(message = "É obrigatório informar o tipo do produto!")
 	private String tipo;
 
-	@NotBlank(message = "É obrigatório informar o volume!")
 	private String volume;
 
-	@NotBlank(message = "É obrigatório informar tipo de embalagem!")
 	private String tipoEmbalagem;
 
-	@NotNull(message = "É obrigatório informar a imagem do rótulo!")
 	private byte[] imagemRotuloBase;
 
-	@NotNull(message = "É obrigatório informar a foto do recipiente!")
 	private byte[] fotoRecipienteBase;
 
 	public ProdutoDTO() {
@@ -89,12 +83,8 @@ public class ProdutoDTO implements Serializable {
 		this.fotoRecipienteBase = fotoRecipienteBase;
 	}
 
-	public ProdutoDTO(@NotBlank(message = "É obrigatório informar a descrição da marca!") String descricaoMarca,
-			@NotBlank(message = "É obrigatório informar o tipo do produto!") String tipo,
-			@NotBlank(message = "É obrigatório informar o volume!") String volume,
-			@NotBlank(message = "É obrigatório informar tipo de embalagem!") String tipoEmbalagem,
-			@NotNull(message = "É obrigatório informar a imagem do rótulo!") byte[] imagemRotuloBase,
-			@NotNull(message = "É obrigatório informar a foto do recipiente!") byte[] fotoRecipienteBase) {
+	public ProdutoDTO(String descricaoMarca, String tipo, String volume, String tipoEmbalagem, byte[] imagemRotuloBase,
+			byte[] fotoRecipienteBase) {
 		super();
 		this.descricaoMarca = descricaoMarca;
 		this.tipo = tipo;

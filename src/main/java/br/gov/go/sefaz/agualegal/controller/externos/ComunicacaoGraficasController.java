@@ -20,6 +20,7 @@ import br.gov.go.sefaz.agualegal.dto.TokenRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.services.ComunicacaoGraficasService;
 import br.gov.go.sefaz.agualegal.services.TokenGraficasService;
+import br.gov.go.sefaz.agualegal.utils.MockTestes;
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 @RestController
@@ -65,12 +66,14 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
-
-	/*@GetMapping(value = "/teste")
-	public ResponseEntity<RespostaPadrao> teste() {
-		SolicitacaoCredenciamentoDTO dto = UtilsAguaLegal.mockTemporarioSolicitacaoDTO();
+	
+	@PostMapping(value = "/solicitarCredenciamento2")
+	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora2(
+			) {
+		SolicitacaoCredenciamentoDTO dto = MockTestes.solicitacaoCredenciamentoComErrosProdutos();
 		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
-	}*/
+	}
 
+	
 }
