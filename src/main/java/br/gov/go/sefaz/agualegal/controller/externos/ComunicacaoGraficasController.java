@@ -67,13 +67,13 @@ public class ComunicacaoGraficasController implements ComunicacaoGraficasControl
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/solicitarCredenciamento2")
+	/*@PostMapping(value = "/solicitarCredenciamento2")
 	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora2(
 			) {
 		SolicitacaoCredenciamentoDTO dto = MockTestes.solicitacaoCredenciamentoComErrosProdutos();
 		RespostaPadrao resposta = this.comunicacaoGraficasService.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
-	}
+	}*/
 
 	
 }

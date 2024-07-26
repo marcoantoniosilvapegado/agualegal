@@ -19,6 +19,7 @@ import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.enums.MENSAGENSPADRAO;
 import br.gov.go.sefaz.agualegal.exception.EnvasadoraRegrasException;
 import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
+import br.gov.go.sefaz.agualegal.exception.ValidacaoSolicitacaoException;
 import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCampoForm;
@@ -105,9 +106,9 @@ public class ComunicacaoGraficasService {
 
 	public RespostaPadrao solicitaCredenciamentoEnvasadora(SolicitacaoCredenciamentoDTO dto) {
 		//tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
-
+				
 		/*Será feita validação nos campos recebidos. Caso validado, os dados serão persistidos no banco*/
-		validacaoSolicitacaoCredenciamento.validacaoSolicitacaoCredenciamento(dto);
+		validacaoSolicitacaoCredenciamento.validacaoDadosSolicitacaoCredenciamento(dto);
 		
 		/*Salvar credenciamento*/
 		Credenciamento credenciamento = this.salvaSolicitacaoCredenciamento(dto);
@@ -149,13 +150,21 @@ public class ComunicacaoGraficasService {
 
 	private Credenciamento montaCredenciamento(SolicitacaoCredenciamentoDTO dto) {
 		Credenciamento credenciamento = new Credenciamento();
-
+		
+		
+		String cnpjEnvasadora = UtilsAguaLegal.extracaoDadosListaCampos("CNPJ", dto);
+		/*Verificar se existe alguma solicitação de credenciamento vigente para aquele cnpj*/
+		Integer solicitacoes = credenciamentoRepository.verificaSolicitacaoVigente(cnpjEnvasadora);
+		if(solicitacoes>0) {
+			throw new SolicitacaoCredenciamentoException("Já existe uma solicitação de credenciamento vigente para este CNPJ",1);
+		}		
+		credenciamento.setCnpj(cnpjEnvasadora);
 		credenciamento.setDataSolicitacao(new Date());
 		credenciamento.setInscricaoEstadual(Long.parseLong(dto.getInscricaoEstadual()));
 		credenciamento.setStatus(1);// solicitado
-		credenciamento.setCnpj(UtilsAguaLegal.extracaoDadosListaCampos("CNPJ", dto));
+		
 		credenciamento.setRazaoSocial(UtilsAguaLegal.extracaoDadosListaCampos("Razão Social", dto));
-
+		
 		return credenciamento;
 
 	}

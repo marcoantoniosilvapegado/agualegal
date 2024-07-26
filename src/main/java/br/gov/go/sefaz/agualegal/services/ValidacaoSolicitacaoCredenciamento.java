@@ -25,11 +25,11 @@ public class ValidacaoSolicitacaoCredenciamento {
 		this.campoFormularioRepository = campoFormularioRepository;
 	}
 
-	public void validacaoSolicitacaoCredenciamento(SolicitacaoCredenciamentoDTO dto) {
+	public void validacaoDadosSolicitacaoCredenciamento(SolicitacaoCredenciamentoDTO dto) {
 
 		ValidationError errors = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação",
 				System.currentTimeMillis());
-
+						
 		/* Inicializa lista de validações */
 		errors.setList(new ArrayList<>());
 
@@ -96,7 +96,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 	private void validaArquivosEnviados(List<CampoFormulario> listaCamposConfiguracao, SolicitacaoCredenciamentoDTO dto,
 			ValidationError errors) {
 
-		listaCamposConfiguracao.stream().forEach(item -> System.out.println(item.getTipoResposta().getTipoResposta()));
+//		listaCamposConfiguracao.stream().forEach(item -> System.out.println(item.getTipoResposta().getTipoResposta()));
 
 		/*Cria uma coleção dos campos de formulario referentes a arquivos(ou seja, não textuais)*/
 		List<CampoFormulario> listaCamposArquivo = listaCamposConfiguracao.stream()
