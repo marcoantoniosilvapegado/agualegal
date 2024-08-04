@@ -25,8 +25,7 @@ public class CredenciamentoEnvasadoraController {
 	
 	@PostMapping(value = "/solicitacao")
 	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora(
-			@RequestBody @Valid DadosSolicitacaoDTO dto
-			) {			
+			@RequestBody @Valid DadosSolicitacaoDTO dto){			
 		RespostaPadrao resposta = this.service.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
 	}	

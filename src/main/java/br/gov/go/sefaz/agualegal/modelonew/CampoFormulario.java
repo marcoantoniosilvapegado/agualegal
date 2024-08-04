@@ -15,7 +15,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "TAB_CAMPOS_FORMULARIO")
-public class CamposFormulario {
+public class CampoFormulario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_campos_formulario")
@@ -49,11 +49,11 @@ public class CamposFormulario {
 	@JoinColumn(name = "id_tipo_resposta", foreignKey = @ForeignKey(name = "FK_TIPO_RESPOSTA"))
 	private TipoResposta tipoResposta;
 
-	public CamposFormulario() {
+	public CampoFormulario() {
 		
 	}
 
-	public CamposFormulario(Long idCampoFormulario, String nomeCriterio, String descricaoCriterio,
+	public CampoFormulario(Long idCampoFormulario, String nomeCriterio, String descricaoCriterio,
 			String codigoCriterio, char campoObrigatorio, char disponibilizarCampo, char status,
 			TipoAnalise tipoAnalise, TipoResposta tipoResposta) {		
 		this.idCampoFormulario = idCampoFormulario;
@@ -161,7 +161,7 @@ public class CamposFormulario {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CamposFormulario other = (CamposFormulario) obj;
+		CampoFormulario other = (CampoFormulario) obj;
 		return campoObrigatorio == other.campoObrigatorio && Objects.equals(codigoCriterio, other.codigoCriterio)
 				&& Objects.equals(descricaoCriterio, other.descricaoCriterio)
 				&& disponibilizarCampo == other.disponibilizarCampo

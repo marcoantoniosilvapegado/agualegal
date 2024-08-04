@@ -1,36 +1,5 @@
 package br.gov.go.sefaz.agualegal.services;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
-import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
-import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
-import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
-import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.CadastroDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.ResponsavelDTO;
-import br.gov.go.sefaz.agualegal.enums.MENSAGENSPADRAO;
-import br.gov.go.sefaz.agualegal.exception.EnvasadoraRegrasException;
-import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
-import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
-import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
-import br.gov.go.sefaz.agualegal.modelo.PedidoCampoForm;
-import br.gov.go.sefaz.agualegal.modelo.PedidoCredenciamento;
-import br.gov.go.sefaz.agualegal.modelo.PedidoProduto;
-import br.gov.go.sefaz.agualegal.repository.CampoFormularioRepository;
-import br.gov.go.sefaz.agualegal.repository.ComunicacaoGraficasRepository;
-import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
-import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
-
 //@Service
 public class ComunicacaoGraficasService {
 

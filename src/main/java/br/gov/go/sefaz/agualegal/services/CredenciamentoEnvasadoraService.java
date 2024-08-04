@@ -45,8 +45,7 @@ public class CredenciamentoEnvasadoraService {
 			TipoAguaRepository tipoAguaRepository, StatusCredenciamentoRepository statusCredenciamentoRepository,
 			CredenciamentoRepository credenciamentoRepository, GraficaRepository graficaRepository,
 			StatusAnaliseRepository statusAnaliseRepository, TipoPedidoRepository tipoPedidoRepository,
-			PedidoCredenciamentoRepository pedidoCredenciamentoRepository, 
-			DadosPedidoRepository dadosPedidoRepository,
+			PedidoCredenciamentoRepository pedidoCredenciamentoRepository, DadosPedidoRepository dadosPedidoRepository,
 			ValidacaoSolicitacaoCredenciamentoNew validacaoSolicitacaoCredenciamentoNew) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
@@ -63,17 +62,33 @@ public class CredenciamentoEnvasadoraService {
 
 	@Transactional
 	public RespostaPadrao solicitaCredenciamentoEnvasadora(DadosSolicitacaoDTO dto) {
-	//	DadosSolicitacaoDTO dto = MockTestes.mock1();
 		/* Validação dos dados recebidos na solicitação de credenciamento */
 		this.validacaoSolicitacaoCredenciamentoNew.validacaoDadosSolicitacaoCredenciamento(dto);
 
 		TipoAgua tipoAgua = tipoAguaRepository.findById(Integer.parseInt(dto.getTipoAgua())).orElseThrow(
 				() -> new SolicitacaoCredenciamentoException("Tipo de água não encontrado: " + dto.getTipoAgua(), 1));
 
+		/* Verificação de solicitação de credenciamento vigente */
+
+		Integer qtdSolicitacaoVigente = this.credenciamentoRepository
+				.verificaSolicitacaoCredenciamentoVigente(dto.getCadastro().getCnpj());
+		if (qtdSolicitacaoVigente > 0) {
+			throw new SolicitacaoCredenciamentoException(
+					"Já existe uma solicitação de credenciamento para o cnpj " + dto.getCadastro().getCnpj(), 1);
+		}
+
+		/* Verificação de credenciamento ativo */
+		Integer qtdCredenciamentoAtivo = this.credenciamentoRepository
+				.verificaCredeciamentoAtivo(dto.getCadastro().getCnpj());
+		if (qtdCredenciamentoAtivo > 0) {
+			throw new SolicitacaoCredenciamentoException(
+					"Já existe um credenciamento ativo para o cnpj " + dto.getCadastro().getCnpj(), 1);
+		}
+
 		Envasadora envasadora = this.persistenciaEnvasadora(dto, tipoAgua);
 		Credenciamento credenciamento = persistenciaCredenciamento(dto, envasadora);
 		PedidoCredenciamento pedido = persistenciaPedidoCredenciamento(dto, credenciamento);
-		persistenciaDadosPedido(dto,pedido);
+		persistenciaDadosPedido(dto, pedido);
 
 		return new RespostaPadrao("Solicitação de credenciamento salva com sucesso! Código da solicitação: "
 				+ credenciamento.getIdCredenciamento(), 1, true);
@@ -81,23 +96,15 @@ public class CredenciamentoEnvasadoraService {
 
 	private DadosPedido persistenciaDadosPedido(DadosSolicitacaoDTO dto, PedidoCredenciamento pedido) {
 		DadosPedido dadosPedido = new DadosPedido();
-		
+
 		dadosPedido.setPedidoCredenciamento(pedido);
-		
-		dadosPedido.setJsonResponsavel(
-				UtilsAguaLegal.toJson(dto.getResponsavel())
-				);
-		dadosPedido.setJsonEnvasadora(
-				UtilsAguaLegal.toJson(dto.getCadastro())
-				);		
-		dadosPedido.setJsonProdutos(
-				UtilsAguaLegal.toJson(dto.getListaProdutos())
-				);
-		dadosPedido.setJsonLicencas(
-				UtilsAguaLegal.toJson(dto.getListaLicencas())
-				);
+
+		dadosPedido.setJsonResponsavel(UtilsAguaLegal.toJson(dto.getResponsavel()));
+		dadosPedido.setJsonEnvasadora(UtilsAguaLegal.toJson(dto.getCadastro()));
+		dadosPedido.setJsonProdutos(UtilsAguaLegal.toJson(dto.getListaProdutos()));
+		dadosPedido.setJsonLicencas(UtilsAguaLegal.toJson(dto.getListaLicencas()));
 		return this.dadosPedidoRepository.save(dadosPedido);
-				
+
 	}
 
 	private PedidoCredenciamento persistenciaPedidoCredenciamento(DadosSolicitacaoDTO dto,
@@ -110,7 +117,7 @@ public class CredenciamentoEnvasadoraService {
 
 		pedidoCredenciamento.setCredenciamento(credenciamento);
 		pedidoCredenciamento.setDataPedido(new Date());
-		pedidoCredenciamento.setNumeroPedido(123456);
+		pedidoCredenciamento.setNumeroPedido(123457);
 
 		pedidoCredenciamento.setObservacao(UtilsAguaLegal.isEmpty(dto.getObservacao()) ? "" : dto.getObservacao());
 		pedidoCredenciamento.setGrafica(grafica);

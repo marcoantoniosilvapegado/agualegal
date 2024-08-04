@@ -3,6 +3,8 @@ package br.gov.go.sefaz.agualegal.dto.solicitacao;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.validation.constraints.Pattern;
+
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 public class ResponsavelDTO implements Serializable {

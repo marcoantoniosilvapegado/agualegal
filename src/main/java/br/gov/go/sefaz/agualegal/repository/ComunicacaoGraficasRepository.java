@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.mapper.CampoAnaliseMapper;
-import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 
 //@Repository
 public class ComunicacaoGraficasRepository {

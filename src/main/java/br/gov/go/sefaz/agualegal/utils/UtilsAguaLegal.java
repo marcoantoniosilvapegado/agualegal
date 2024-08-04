@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.apache.commons.validator.routines.EmailValidator;
 import javax.imageio.ImageIO;
 
 import org.apache.tika.Tika;
@@ -104,6 +104,79 @@ public class UtilsAguaLegal {
 		try (FileOutputStream fos = new FileOutputStream(file)) {
 			fos.write(fileBytes);
 		}
+	}
+
+	public static boolean verificaEmailValido(String email) {
+		if (email == null || email.isEmpty()) {
+			return false;
+		}
+
+		EmailValidator validator = EmailValidator.getInstance();
+		return validator.isValid(email);
+	}
+
+	public static boolean verificaCpfValido(String cpf) {
+		if (cpf == null || cpf.length() != 11 || !cpf.matches("\\d{11}")) {
+			return false;
+		}
+
+		// Verifica se todos os dígitos são iguais
+		if (cpf.matches("(\\d)\\1{10}")) {
+			return false;
+		}
+
+		// Calcula o primeiro dígito verificador
+		int sum = 0;
+		for (int i = 0; i < 9; i++) {
+			sum += (cpf.charAt(i) - '0') * (10 - i);
+		}
+		int firstCheckDigit = 11 - (sum % 11);
+		if (firstCheckDigit >= 10) {
+			firstCheckDigit = 0;
+		}
+
+		// Calcula o segundo dígito verificador
+		sum = 0;
+		for (int i = 0; i < 10; i++) {
+			sum += (cpf.charAt(i) - '0') * (11 - i);
+		}
+		int secondCheckDigit = 11 - (sum % 11);
+		if (secondCheckDigit >= 10) {
+			secondCheckDigit = 0;
+		}
+
+		// Verifica os dígitos calculados com os dígitos informados
+		return cpf.charAt(9) - '0' == firstCheckDigit && cpf.charAt(10) - '0' == secondCheckDigit;
+	}
+
+	public static boolean verificaCnpjValido(String cnpj) {
+		if (cnpj == null || cnpj.length() != 14 || !cnpj.matches("\\d{14}")) {
+			return false;
+		}
+
+		// Verifica se todos os dígitos são iguais
+		if (cnpj.matches("(\\d)\\1{13}")) {
+			return false;
+		}
+
+		// Cálculo do primeiro dígito verificador
+		int[] weights1 = { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+		int sum = 0;
+		for (int i = 0; i < 12; i++) {
+			sum += (cnpj.charAt(i) - '0') * weights1[i];
+		}
+		int firstCheckDigit = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+
+		// Cálculo do segundo dígito verificador
+		int[] weights2 = { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
+		sum = 0;
+		for (int i = 0; i < 13; i++) {
+			sum += (cnpj.charAt(i) - '0') * weights2[i];
+		}
+		int secondCheckDigit = sum % 11 < 2 ? 0 : 11 - (sum % 11);
+
+		// Verifica os dígitos calculados com os dígitos informados
+		return cnpj.charAt(12) - '0' == firstCheckDigit && cnpj.charAt(13) - '0' == secondCheckDigit;
 	}
 
 }
