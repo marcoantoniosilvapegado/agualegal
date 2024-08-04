@@ -15,11 +15,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import br.gov.go.sefaz.agualegal.dto.solicitacao.CampoDTO;
-
-@Entity
-@Table(name = "TAB_PEDIDO_CAMPO_FORM")
+//@Entity
+//@Table(name = "TAB_PEDIDO_CAMPO_FORM")
 public class PedidoCampoForm {
 
 	@Id
@@ -27,6 +26,7 @@ public class PedidoCampoForm {
 	@Column(name = "id_pedido_campo_form")
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_pedido_credenciamento", nullable = false)
 	private PedidoCredenciamento pedidoCredenciamento;
@@ -45,9 +45,25 @@ public class PedidoCampoForm {
 	@Column(name = "data_vencimento")
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;
-	
+
 	public PedidoCampoForm() {
 
+	}
+
+	public PedidoCampoForm(PedidoCredenciamento pedidoCredenciamento, String valorCampo,
+			CampoFormulario campoFormulario) {
+		super();
+		this.pedidoCredenciamento = pedidoCredenciamento;
+		this.valorCampo = valorCampo;
+		this.campoFormulario = campoFormulario;
+	}
+
+	public PedidoCampoForm(PedidoCredenciamento pedidoCredenciamento, byte[] conteudoArquivo,
+			CampoFormulario campoFormulario) {
+		super();
+		this.pedidoCredenciamento = pedidoCredenciamento;
+		this.conteudoArquivo = conteudoArquivo;
+		this.campoFormulario = campoFormulario;
 	}
 
 	public PedidoCampoForm(Long id, PedidoCredenciamento pedidoCredenciamento, String valorCampo,
@@ -68,6 +84,7 @@ public class PedidoCampoForm {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public PedidoCredenciamento getPedidoCredenciamento() {
 		return pedidoCredenciamento;
 	}

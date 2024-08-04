@@ -4,13 +4,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.springframework.web.multipart.MultipartFile;
-
-import io.swagger.v3.oas.annotations.media.Schema;
-
 public class ProdutoDTO implements Serializable {
 
 	/**
@@ -20,20 +13,15 @@ public class ProdutoDTO implements Serializable {
 
 	private String descricaoMarca;
 
-	private String tipo;
+	private byte[] imagemRecipiente;
 
-	private String volume;
+	private byte[] imagemRotulo;
 
-	private String tipoEmbalagem;
+	private Integer tipoEmbalagem;
 
-	private byte[] imagemRotuloBase;
+	private Integer tipoProduto;
 
-	private byte[] fotoRecipienteBase;
-
-	public ProdutoDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	private Integer volume;
 
 	public String getDescricaoMarca() {
 		return descricaoMarca;
@@ -43,71 +31,60 @@ public class ProdutoDTO implements Serializable {
 		this.descricaoMarca = descricaoMarca;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public byte[] getImagemRecipiente() {
+		return imagemRecipiente;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setImagemRecipiente(byte[] imagemRecipiente) {
+		this.imagemRecipiente = imagemRecipiente;
 	}
 
-	public String getVolume() {
-		return volume;
+	public byte[] getImagemRotulo() {
+		return imagemRotulo;
 	}
 
-	public void setVolume(String volume) {
-		this.volume = volume;
+	public void setImagemRotulo(byte[] imagemRotulo) {
+		this.imagemRotulo = imagemRotulo;
 	}
 
-	public String getTipoEmbalagem() {
+	public Integer getTipoEmbalagem() {
 		return tipoEmbalagem;
 	}
 
-	public void setTipoEmbalagem(String tipoEmbalagem) {
+	public void setTipoEmbalagem(Integer tipoEmbalagem) {
 		this.tipoEmbalagem = tipoEmbalagem;
 	}
 
-	public byte[] getImagemRotuloBase() {
-		return imagemRotuloBase;
+	public Integer getTipoProduto() {
+		return tipoProduto;
 	}
 
-	public void setImagemRotuloBase(byte[] imagemRotuloBase) {
-		this.imagemRotuloBase = imagemRotuloBase;
+	public void setTipoProduto(Integer tipoProduto) {
+		this.tipoProduto = tipoProduto;
 	}
 
-	public byte[] getFotoRecipienteBase() {
-		return fotoRecipienteBase;
+	public Integer getVolume() {
+		return volume;
 	}
 
-	public void setFotoRecipienteBase(byte[] fotoRecipienteBase) {
-		this.fotoRecipienteBase = fotoRecipienteBase;
-	}
-
-	public ProdutoDTO(String descricaoMarca, String tipo, String volume, String tipoEmbalagem, byte[] imagemRotuloBase,
-			byte[] fotoRecipienteBase) {
-		super();
-		this.descricaoMarca = descricaoMarca;
-		this.tipo = tipo;
+	public void setVolume(Integer volume) {
 		this.volume = volume;
-		this.tipoEmbalagem = tipoEmbalagem;
-		this.imagemRotuloBase = imagemRotuloBase;
-		this.fotoRecipienteBase = fotoRecipienteBase;
 	}
 
 	@Override
 	public String toString() {
-		return "ProdutoDTO [descricaoMarca=" + descricaoMarca + ", tipo=" + tipo + ", volume=" + volume
-				+ ", tipoEmbalagem=" + tipoEmbalagem + ", imagemRotuloBase=" + Arrays.toString(imagemRotuloBase)
-				+ ", fotoRecipienteBase=" + Arrays.toString(fotoRecipienteBase) + "]";
+		return "ProdutoDTO [descricaoMarca=" + descricaoMarca + ", imagemRecipiente="
+				+ Arrays.toString(imagemRecipiente) + ", imagemRotulo=" + Arrays.toString(imagemRotulo)
+				+ ", tipoEmbalagem=" + tipoEmbalagem + ", tipoProduto=" + tipoProduto + ", volume=" + volume + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(fotoRecipienteBase);
-		result = prime * result + Arrays.hashCode(imagemRotuloBase);
-		result = prime * result + Objects.hash(descricaoMarca, tipo, tipoEmbalagem, volume);
+		result = prime * result + Arrays.hashCode(imagemRecipiente);
+		result = prime * result + Arrays.hashCode(imagemRotulo);
+		result = prime * result + Objects.hash(descricaoMarca, tipoEmbalagem, tipoProduto, volume);
 		return result;
 	}
 
@@ -121,9 +98,9 @@ public class ProdutoDTO implements Serializable {
 			return false;
 		ProdutoDTO other = (ProdutoDTO) obj;
 		return Objects.equals(descricaoMarca, other.descricaoMarca)
-				&& Arrays.equals(fotoRecipienteBase, other.fotoRecipienteBase)
-				&& Arrays.equals(imagemRotuloBase, other.imagemRotuloBase) && Objects.equals(tipo, other.tipo)
-				&& Objects.equals(tipoEmbalagem, other.tipoEmbalagem) && Objects.equals(volume, other.volume);
+				&& Arrays.equals(imagemRecipiente, other.imagemRecipiente)
+				&& Arrays.equals(imagemRotulo, other.imagemRotulo) && Objects.equals(tipoEmbalagem, other.tipoEmbalagem)
+				&& Objects.equals(tipoProduto, other.tipoProduto) && Objects.equals(volume, other.volume);
 	}
 
 }

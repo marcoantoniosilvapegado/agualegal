@@ -7,16 +7,15 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import br.gov.go.sefaz.agualegal.dto.solicitacao.ArquivoDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
 import br.gov.go.sefaz.agualegal.exception.ValidacaoSolicitacaoException;
 import br.gov.go.sefaz.agualegal.exception.ValidationError;
 import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 import br.gov.go.sefaz.agualegal.repository.CampoFormularioRepository;
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
-@Service
+//@Service
 public class ValidacaoSolicitacaoCredenciamento {
 
 	private CampoFormularioRepository campoFormularioRepository;
@@ -24,165 +23,232 @@ public class ValidacaoSolicitacaoCredenciamento {
 	public ValidacaoSolicitacaoCredenciamento(CampoFormularioRepository campoFormularioRepository) {
 		this.campoFormularioRepository = campoFormularioRepository;
 	}
+	
+	public void validacaoDadosSolicitacaoCredenciamento(DadosSolicitacaoDTO dto) {
+		
+	}
 
-	public void validacaoDadosSolicitacaoCredenciamento(SolicitacaoCredenciamentoDTO dto) {
-
+	public void validacaoDadosSolicitacaoCredenciamento2(DadosSolicitacaoDTO dto) {
 		ValidationError errors = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação",
 				System.currentTimeMillis());
-						
+
 		/* Inicializa lista de validações */
 		errors.setList(new ArrayList<>());
+	
+		/* Validação dos campos obrigatórios */
 
-		/* Inicialmente, será feita validação sob a lista de produtos */
-		this.validaListaProdutos(dto.getListaProdutos(), errors);
+		this.validaCamposFormulario(dto, errors);
 
-		/*
-		 * Verifica se em listaCampos e listaArquivos foram enviados os dados
-		 * necessários para a solicitação, bem como com os formatos pre etabelecidos
-		 */
-		this.validaCamposObrigatorios(dto, errors);
-
-		/*
-		 * Se um ou mais erros foram encontrados ao longo da validação, retorna exceção
-		 * com o conteúdo dos erros encontrados
-		 */
 		if (errors.hasErrors()) {
 			throw new ValidacaoSolicitacaoException(errors);
 		}
+	}
+
+	private void validaCamposFormulario(DadosSolicitacaoDTO dto, ValidationError errors) {
+
+		/**/
+		List<CampoFormulario> list = null;//this.campoFormularioRepository.findCamposAtivosFormulario().get();
+
+		this.validaCamposCadastroEnvasadora(dto, errors, list);
+		this.validaCamposResponsavelEnvasadora(dto, errors, list);
+		this.validaCamposEnderecoEnvase(dto, errors, list);
+		this.validaLicencas(dto, errors, list);
+
+		CampoFormulario observacao = list.stream().filter(item -> item.getId().equals(20L)).collect(Collectors.toList())
+				.get(0);
+
+		if (UtilsAguaLegal.isEmpty(dto.getObservacao())
+				&& (observacao != null && observacao.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Observação");
+		}
 
 	}
 
-	private void validaCamposObrigatorios(SolicitacaoCredenciamentoDTO dto, ValidationError errors) {
-		/* Carrega lista de campos configurados para envio */
-		List<CampoFormulario> listaCamposConfiguracao = this.campoFormularioRepository
-				.findCamposObrigatoriosFormulario(dto.getTipoAgua()).get();
+	private void validaLicencas(DadosSolicitacaoDTO dto, ValidationError errors, List<CampoFormulario> list) {
 
-		/*Cria uma lista de String com os campos configurados para simplificar a verificação*/
-		List<String> listaCamposConfigurados = listaCamposConfiguracao.stream().map(item -> item.getNomeCriterio())
-				.collect(Collectors.toList());
+		CampoFormulario emissorLicencaVigilancia = list.stream().filter(item -> item.getId().equals(10L))
+				.collect(Collectors.toList()).get(0);
 
-		/*Monta uma List<String> com as descrições dos campos enviados pelo usuário>*/
-		List<String> listaCamposEnviados = dto.getListaCampos().stream().map(item -> item.getNomeCampo())
-				.collect(Collectors.toList());
-		
-		/*Monta uma List<String> com as descrições dos campos referentes a arquivos enviados pelo usuário,
-		 * e agrega na lista anterior>*/
-		listaCamposEnviados
-				.addAll(dto.getListaArquivos().stream().map(item -> item.getNomeCampo()).collect(Collectors.toList()));
+		CampoFormulario imagemLicencaVigilancia = list.stream().filter(item -> item.getId().equals(11L))
+				.collect(Collectors.toList()).get(0);
 
-		/*Faz um de-para entre campos configurados e campos enviados pela gráfica.*/
-		List<String> listaCamposFaltantes = UtilsAguaLegal.filtrarItensLista(listaCamposConfigurados,
-				listaCamposEnviados);
+		CampoFormulario numeroLicencaVigilancia = list.stream().filter(item -> item.getId().equals(12L))
+				.collect(Collectors.toList()).get(0);
 
-		/*Se ess lista não está vazia, é indício de que houve campos não enviados pela gráfica
-		 * As mensagens referentes a cada campo serão inseridas na coleção, e será encerrada aqui a validação*/
-		if (!listaCamposFaltantes.isEmpty()) {
-			for (int i = 0; i < listaCamposFaltantes.size(); i++) {
-				errors.addError("Campo não encontrado", listaCamposFaltantes.get(i));
+		CampoFormulario imagemLicencaMineral = list.stream().filter(item -> item.getId().equals(13L))
+				.collect(Collectors.toList()).get(0);
+
+		CampoFormulario numeroLicencaMineral = list.stream().filter(item -> item.getId().equals(14L))
+				.collect(Collectors.toList()).get(0);
+
+	/*	if (UtilsAguaLegal.isEmpty(dto.getLicencaVigilancia().getEmissor())
+				&& (emissorLicencaVigilancia != null && emissorLicencaVigilancia.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Emissor licença sanitária");
+		}*/
+
+		if (UtilsAguaLegal.isEmpty(dto.getLicencaVigilancia().getNumero())
+				&& (numeroLicencaVigilancia != null && numeroLicencaVigilancia.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Número licença sanitária");
+		}
+
+		if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaVigilancia().getImagem())) {
+			if (imagemLicencaVigilancia != null && imagemLicencaVigilancia.getCampoObrigatorio().equals("S")) {
+				errors.addError("Campo não informado", "Imagem da licença sanitária");
 			}
 		} else {
-			/*
-			 * Se todos os campos foram enviados, verificar se nos campos de arquivo foi
-			 * enviado o byte[] de formato correto, não vazio e respeitando o tamanho limite de imagem,
-			 * em caso de a informação estar assim configurada (2MB)
-			 */
-
-			this.validaArquivosEnviados(listaCamposConfiguracao, dto, errors);
-
+			if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaVigilancia().getImagem()).equals("IMAGEM")) {
+				errors.addError("Formato do campo não informado corretamente", "Imagem da licença sanitária");
+			} else {
+				if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaVigilancia().getImagem(), true)) {
+					errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença sanitária");
+				}
+			}
 		}
 
-	}
-
-	private void validaArquivosEnviados(List<CampoFormulario> listaCamposConfiguracao, SolicitacaoCredenciamentoDTO dto,
-			ValidationError errors) {
-
-//		listaCamposConfiguracao.stream().forEach(item -> System.out.println(item.getTipoResposta().getTipoResposta()));
-
-		/*Cria uma coleção dos campos de formulario referentes a arquivos(ou seja, não textuais)*/
-		List<CampoFormulario> listaCamposArquivo = listaCamposConfiguracao.stream()
-				.filter(item -> !item.getTipoResposta().getTipoResposta().equals("TEXTO")).collect(Collectors.toList());
-
-		List<ArquivoDTO> listaArquivos = dto.getListaArquivos();
-
-		/*Varre a lista de arquivos recebidos para fazer as validações necessárias*/
-		for (int i = 0; i < listaArquivos.size(); i++) {
-			
-			ArquivoDTO arquivo = listaArquivos.get(i);
-			
-			/*Consulta o CampoFormulario referente àquele registro recebido, para fazer a validação de se
-			 * o formato do arquivo recebido é o mesmo que está configurado*/
-			CampoFormulario campoFormulario = listaCamposArquivo.stream().filter(item -> {
-				return item.getNomeCriterio().equals(arquivo.getNomeCampo());
-			}).findFirst().get();
-
-			/*Se há byte[] enviado*/
-			if (UtilsAguaLegal.isNotEmpty(arquivo.getFile())) {
-				/*Valida formato. IMAGEM , PDF*/
-				if (!UtilsAguaLegal.detectarExtensaoConteudo(arquivo.getFile())
-						.equals(campoFormulario.getTipoResposta().getTipoResposta())) {
-					errors.addError(arquivo.getNomeCampo(), "Formato do arquivo enviado incorretamente. Era esperado "
-							+ campoFormulario.getTipoResposta().getTipoResposta());
-				} else {
-					if (!UtilsAguaLegal.verificaTamanhoImagemValido(arquivo.getFile())) {
-						errors.addError(arquivo.getNomeCampo(),
-								"O tamanho da imagem referente ao campo excedeu o limite de 2 MB");
-					}
+		/*
+		 * se for tipo 1(água de sais) não é validado licença da agência nacional de
+		 * mineração
+		 */
+		if (!dto.getTipoAgua().equals("1")) {
+			/* Validar imagem da licença da agência nacional de mineração */
+			if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaMineracao().getImagem())) {
+				if (imagemLicencaMineral != null && imagemLicencaMineral.getCampoObrigatorio().equals("S")) {
+					errors.addError("Campo não informado", "Imagem da licença de mineração");
 				}
 			} else {
-				/*Se o byte[] está vazio ou nulo*/
-				errors.addError(arquivo.getNomeCampo(), "Conteúdo do arquivo enviado está vazio");
+				if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaMineracao().getImagem()).equals("IMAGEM")) {
+					errors.addError("Formato do campo não informado corretamente", "Imagem da licença mineração");
+				} else {
+					if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaMineracao().getImagem(), true)) {
+						errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença de mineração");
+					}
+				}
+			}
+
+			/* Validar número da licença da agência nacional de mineração */
+			if (UtilsAguaLegal.isEmpty(dto.getLicencaMineracao().getNumero())
+					&& (numeroLicencaMineral != null && numeroLicencaMineral.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Número licença mineração");
 			}
 
 		}
 
 	}
 
-	private void validaListaProdutos(List<ProdutoDTO> listaProdutos, ValidationError errors) {
+	private void validaCamposEnderecoEnvase(DadosSolicitacaoDTO dto, ValidationError errors,
+			List<CampoFormulario> list) {
 
-		/* Verificar campos vazios, formato das imagens e tamanho */
-		for (int i = 0; i < listaProdutos.size(); i++) {
-			ProdutoDTO produto = listaProdutos.get(i);
-			Integer numeroProduto = i + 1;
-			if (UtilsAguaLegal.isEmpty(produto.getTipo())) {
-				errors.addError("Produto - " + numeroProduto, "Tipo deve ser informado");
-			}
-			if (UtilsAguaLegal.isEmpty(produto.getDescricaoMarca())) {
-				errors.addError("Produto - " + numeroProduto, "Descrição da marca ser informada");
-			}
-			if (UtilsAguaLegal.isEmpty(produto.getTipoEmbalagem())) {
-				errors.addError("Produto - " + numeroProduto, "Tipo de embalagem deve ser informada");
-			}
-			if (UtilsAguaLegal.isEmpty(produto.getVolume())) {
-				errors.addError("Produto - " + numeroProduto, "Volume deve ser informado");
-			}
+		CampoFormulario enderecoEnvasadora = list.stream().filter(item -> item.getId().equals(15L))
+				.collect(Collectors.toList()).get(0);
 
-			if (!UtilsAguaLegal.isNotEmpty(produto.getFotoRecipienteBase())) {
-				errors.addError("Produto - " + numeroProduto, "Foto do recipiente deve ser informada");
-			} else {
-				if (!UtilsAguaLegal.isImage(produto.getFotoRecipienteBase())) {
-					errors.addError("Produto - " + numeroProduto,
-							"O arquivo referente ao recipiente deve ser uma imagem");
-				} else {
-					if (!UtilsAguaLegal.verificaTamanhoImagemValido(produto.getFotoRecipienteBase())) {
-						errors.addError("Produto - " + numeroProduto,
-								"O arquivo referente ao recipiente excedeu o tamanho definido de 2MB");
-					}
-				}
-			}
+		CampoFormulario coordenadasEnvasadora = list.stream().filter(item -> item.getId().equals(16L))
+				.collect(Collectors.toList()).get(0);
 
-			if (!UtilsAguaLegal.isNotEmpty(produto.getImagemRotuloBase())) {
-				errors.addError("Produto - " + numeroProduto, "Imagem do rótulo deve ser informada");
-			} else {
-				if (!UtilsAguaLegal.isImage(produto.getImagemRotuloBase())) {
-					errors.addError("Produto - " + numeroProduto, "O arquivo referente ao rótulo deve ser uma imagem");
-				} else {
-					if (!UtilsAguaLegal.verificaTamanhoImagemValido(produto.getImagemRotuloBase())) {
-						errors.addError("Produto - " + numeroProduto,
-								"O arquivo referente ao rótulo excedeu o tamanho definido de 2MB");
-					}
-				}
-			}
+		CampoFormulario enderecoEnvase = list.stream().filter(item -> item.getId().equals(17L))
+				.collect(Collectors.toList()).get(0);
 
+		CampoFormulario coordenadasEnvase = list.stream().filter(item -> item.getId().equals(18L))
+				.collect(Collectors.toList()).get(0);
+
+		/*if (UtilsAguaLegal.isEmpty(dto.getEnderecoEnvasador())
+				&& (enderecoEnvasadora != null && enderecoEnvasadora.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Endereço envasadora");
+		}
+
+		if (UtilsAguaLegal.isEmpty(dto.getCoordenadasEnvasador())
+				&& (coordenadasEnvasadora != null && coordenadasEnvasadora.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Coordenadas envasadora");
+		}
+
+		if (UtilsAguaLegal.isEmpty(dto.getEnderecoEnvase())
+				&& (enderecoEnvase != null && enderecoEnvase.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Endereço envase");
+		}
+
+		if (UtilsAguaLegal.isEmpty(dto.getCoordenadasEnvase())
+				&& (coordenadasEnvase != null && coordenadasEnvase.getCampoObrigatorio().equals("S"))) {
+			errors.addError("Campo não informado", "Coordenadas envase");
+		}*/
+
+	}
+
+	private void validaCamposResponsavelEnvasadora(DadosSolicitacaoDTO dto, ValidationError errors,
+			List<CampoFormulario> list) {
+
+		if (dto.getResponsavel() != null) {
+			CampoFormulario campoNomeResponsavel = list.stream().filter(item -> item.getId().equals(5L))
+					.collect(Collectors.toList()).get(0);
+
+			CampoFormulario campoEmailResponsavel = list.stream().filter(item -> item.getId().equals(6L))
+					.collect(Collectors.toList()).get(0);
+
+			CampoFormulario campoRgResponsavel = list.stream().filter(item -> item.getId().equals(7L))
+					.collect(Collectors.toList()).get(0);
+
+			CampoFormulario campoCpfResponsavel = list.stream().filter(item -> item.getId().equals(8L))
+					.collect(Collectors.toList()).get(0);
+
+			CampoFormulario campoTelefoneResponsavel = list.stream().filter(item -> item.getId().equals(9L))
+					.collect(Collectors.toList()).get(0);
+
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getNomeResponsavel())
+					&& (campoNomeResponsavel != null && campoNomeResponsavel.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Nome Responsável");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getCpfResponsavel())
+					&& (campoCpfResponsavel != null && campoCpfResponsavel.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "CPF Responsável");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getEmailResponsavel())
+					&& (campoEmailResponsavel != null && campoEmailResponsavel.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Email Responsável");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getRgResponsavel())
+					&& (campoRgResponsavel != null && campoRgResponsavel.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "RG Responsável");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getTelefoneResponsavel())
+					&& (campoTelefoneResponsavel != null
+							&& campoTelefoneResponsavel.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Telefone Responsável");
+			}
+		} else {
+			errors.addError("Campo não informado", "Favor informar os campos referentes ao responsável!");
+		}
+
+	}
+
+	private void validaCamposCadastroEnvasadora(DadosSolicitacaoDTO dto, ValidationError errors,
+			List<CampoFormulario> list) {
+
+		if (dto.getCadastro() != null) {
+			CampoFormulario campoCnpj = list.stream().filter(item -> item.getId().equals(1L))
+					.collect(Collectors.toList()).get(0);
+			CampoFormulario campoRazao = list.stream().filter(item -> item.getId().equals(2L))
+					.collect(Collectors.toList()).get(0);
+			CampoFormulario campoNomeFantasia = list.stream().filter(item -> item.getId().equals(3L))
+					.collect(Collectors.toList()).get(0);
+			CampoFormulario campoInscricao = list.stream().filter(item -> item.getId().equals(4L))
+					.collect(Collectors.toList()).get(0);
+
+			if (UtilsAguaLegal.isEmpty(dto.getCadastro().getCnpj())
+					&& (campoCnpj != null && campoCnpj.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "CNPJ");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getCadastro().getRazaoSocial())
+					&& (campoRazao != null && campoRazao.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Razão Social");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getCadastro().getNomeFantasia())
+					&& (campoNomeFantasia != null && campoNomeFantasia.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Nome Fantasia");
+			}
+			if (UtilsAguaLegal.isEmpty(dto.getCadastro().getInscricaoEstadual())
+					&& (campoInscricao != null && campoInscricao.getCampoObrigatorio().equals("S"))) {
+				errors.addError("Campo não informado", "Inscrição Estadual");
+			}
+		} else {
+			errors.addError("Campo não informado", "Favor informar os campos cadastrais da envasadora!");
 		}
 
 	}

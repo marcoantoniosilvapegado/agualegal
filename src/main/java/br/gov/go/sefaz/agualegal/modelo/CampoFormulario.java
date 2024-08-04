@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "TAB_CAMPO_FORMULARIO")
+//@Entity
+//@Table(name = "TAB_CAMPO_FORMULARIO")
 public class CampoFormulario {
 
 	@Id

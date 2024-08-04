@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "TAB_CREDENCIAMENTO")
+//@Entity
+//@Table(name = "TAB_CREDENCIAMENTO")
 public class Credenciamento {
 
 	@Id
@@ -37,7 +37,7 @@ public class Credenciamento {
 	@Column(name = "CNPJ", nullable = false, length = 14)
 	private String cnpj;
 
-	@Column(name = "STATUS", nullable = false)
+	@Column(name = "ID_STATUS_CREDENCIAMENTO", nullable = false)
 	private Integer status;
 
 	@Column(name = "DATA_INICIO")

@@ -13,17 +13,20 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import br.gov.go.sefaz.agualegal.dto.solicitacao.ProdutoDTO;
 
-@Entity
-@Table(name = "TAB_PEDIDO_PRODUTOS")
+//@Entity
+//@Table(name = "TAB_PEDIDO_PRODUTOS")
 public class PedidoProduto {
 
-	@Id
+	/*@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pedido_produto")
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_pedido_credenciamento")
 	private PedidoCredenciamento pedidoCredenciamento;
@@ -85,6 +88,7 @@ public class PedidoProduto {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public PedidoCredenciamento getPedidoCredenciamento() {
 		return pedidoCredenciamento;
 	}
@@ -175,6 +179,6 @@ public class PedidoProduto {
 				&& Objects.equals(pedidoCredenciamento, other.pedidoCredenciamento)
 				&& Objects.equals(tipoEmbalagem, other.tipoEmbalagem) && Objects.equals(tipoProduto, other.tipoProduto)
 				&& Objects.equals(volume, other.volume);
-	}
+	}*/
 
 }

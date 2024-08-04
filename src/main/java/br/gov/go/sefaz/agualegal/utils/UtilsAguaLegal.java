@@ -2,6 +2,8 @@ package br.gov.go.sefaz.agualegal.utils;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,22 +15,18 @@ import javax.imageio.ImageIO;
 
 import org.apache.tika.Tika;
 
-import br.gov.go.sefaz.agualegal.dto.solicitacao.CampoDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
+import com.google.gson.Gson;
 
 public class UtilsAguaLegal {
 
-	public static String extracaoDadosListaCampos(String campo, SolicitacaoCredenciamentoDTO dto) {
-		List<CampoDTO> listAux = dto.getListaCampos().stream().filter(item -> item.getNomeCampo().equals(campo))
-				.collect(Collectors.toList());
-		if (!listAux.isEmpty()) {
-			return listAux.get(0).getConteudoCampo();
-		}
-		return "";
-	}
+	private static final Gson gson = new Gson();
 
 	public static boolean isEmpty(String s) {
 		return s == null || s.trim().length() == 0;
+	}
+
+	public static String toJson(Object obj) {
+		return gson.toJson(obj);
 	}
 
 	public static byte[] carregaBytes(String caminho) {
@@ -54,6 +52,14 @@ public class UtilsAguaLegal {
 		}
 	}
 
+	public static boolean verificaTamanhoImagemValido(byte[] data, boolean campo) {
+		if (data == null) {
+			return false;
+		}
+
+		return campo ? data.length <= 4 * 1024 * 1024 : data.length <= 2 * 1024 * 1024;
+	}
+
 	public static boolean verificaTamanhoImagemValido(byte[] data) {
 		if (data == null) {
 			return false;
@@ -67,7 +73,7 @@ public class UtilsAguaLegal {
 	}
 
 	public static String detectarExtensaoConteudo(byte[] dados) {
-		
+
 		Tika tika = new Tika();
 		String tipoMime;
 
@@ -86,5 +92,18 @@ public class UtilsAguaLegal {
 		return dados != null && dados.length > 0;
 	}
 
+	public static void saveFile(byte[] fileBytes, String directory, String fileName) throws IOException {
+
+		Path path = Paths.get(directory);
+		if (!Files.exists(path)) {
+			Files.createDirectories(path);
+		}
+
+		File file = new File(path.toFile(), fileName);
+
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			fos.write(fileBytes);
+		}
+	}
 
 }

@@ -17,7 +17,7 @@ public class SwaggerConfig {
 	public GroupedOpenApi externalApi() {
 		return GroupedOpenApi.builder().group("externos")
 				.pathsToMatch("/**")
-				.packagesToScan("br.gov.go.sefaz.agualegal.controller.externos").build();
+				.packagesToScan("br.gov.go.sefaz.agualegal.controller").build();
 	}
 
 	@Bean

@@ -18,8 +18,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "TAB_PEDIDO_CREDENCIAMENTO")
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+//@Entity
+//@Table(name = "TAB_PEDIDO_CREDENCIAMENTO")
 public class PedidoCredenciamento {
 
 	@Id
@@ -27,6 +29,7 @@ public class PedidoCredenciamento {
 	@Column(name = "id_pedido_credenciamento")
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_credenciamento")
 	private Credenciamento credenciamento;
@@ -42,7 +45,7 @@ public class PedidoCredenciamento {
 	@Temporal(TemporalType.DATE)
 	private Date dataVencimento;
 
-	@Column(name = "status", nullable = false)
+	@Column(name = "ID_STATUS_PEDIDO", nullable = false)
 	private Integer status;
 
 	@Column(name = "tipo_pedido", nullable = false)
@@ -108,6 +111,7 @@ public class PedidoCredenciamento {
 		this.id = id;
 	}
 
+	@JsonIgnore
 	public Credenciamento getCredenciamento() {
 		return credenciamento;
 	}

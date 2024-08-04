@@ -14,10 +14,10 @@ import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.mapper.CampoAnaliseMapper;
 import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 
-@Repository
+//@Repository
 public class ComunicacaoGraficasRepository {
 
-	private JdbcTemplate jdbcTemplate;
+/*	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
 	IeExcecaoRepository ieExcecaoRepository;
@@ -87,6 +87,6 @@ public class ComunicacaoGraficasRepository {
 		return listaCampos.stream().map(item -> new CampoResponseDTO(item))
 		.collect(Collectors.toList());
 
-	}
+	}*/
 
 }

@@ -1,10 +1,10 @@
 package br.gov.go.sefaz.agualegal.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,11 +15,12 @@ import br.gov.go.sefaz.agualegal.dto.CampoResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposRequestDTO;
 import br.gov.go.sefaz.agualegal.dto.ListaCamposResponseDTO;
 import br.gov.go.sefaz.agualegal.dto.SituacaoEnvasadoraDTO;
-import br.gov.go.sefaz.agualegal.dto.solicitacao.SolicitacaoCredenciamentoDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.CadastroDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.ResponsavelDTO;
 import br.gov.go.sefaz.agualegal.enums.MENSAGENSPADRAO;
 import br.gov.go.sefaz.agualegal.exception.EnvasadoraRegrasException;
 import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
-import br.gov.go.sefaz.agualegal.exception.ValidacaoSolicitacaoException;
 import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCampoForm;
@@ -30,23 +31,22 @@ import br.gov.go.sefaz.agualegal.repository.ComunicacaoGraficasRepository;
 import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
-@Service
+//@Service
 public class ComunicacaoGraficasService {
 
-	private TokenGraficasService tokenGraficasService;
+	/*private TokenGraficasService tokenGraficasService;
 
 	private ComunicacaoGraficasRepository comunicacaoGraficasRepository;
 
 	private CampoFormularioRepository campoFormularioRepository;
-	
+
 	private CredenciamentoRepository credenciamentoRepository;
-	
+
 	private ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento;
 
 	public ComunicacaoGraficasService(TokenGraficasService tokenGraficasService,
 			ComunicacaoGraficasRepository comunicacaoGraficasRepository,
-			CampoFormularioRepository campoFormularioRepository,
-			CredenciamentoRepository credenciamentoRepository, 
+			CampoFormularioRepository campoFormularioRepository, CredenciamentoRepository credenciamentoRepository,
 			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento) {
 		this.tokenGraficasService = tokenGraficasService;
 		this.comunicacaoGraficasRepository = comunicacaoGraficasRepository;
@@ -55,15 +55,11 @@ public class ComunicacaoGraficasService {
 		this.validacaoSolicitacaoCredenciamento = validacaoSolicitacaoCredenciamento;
 	}
 
-	public RespostaPadrao verificaSituacaoEnvasora(SituacaoEnvasadoraDTO dto) {
+/*	public RespostaPadrao verificaSituacaoEnvasora(SituacaoEnvasadoraDTO dto) {
 
-		/* Verifica se token da gráfica é válido */
 		tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
-
-		/*
-		 * Verifica se a envasadora está na lista de exceção Caso esteja, será concedida
-		 * a permissão. Caso não, o fluxo seguirá e outras verificações serão feitas
-		 */
+		
+	
 		Boolean envasadoraListaExcecao = comunicacaoGraficasRepository
 				.verificaEnvasadoraListaExcecao(dto.getInscricaoEstadual());
 
@@ -71,7 +67,6 @@ public class ComunicacaoGraficasService {
 			return new RespostaPadrao(MENSAGENSPADRAO.ENVASADORALISTAEXCECAO.getDesc(), 1, true);
 		}
 
-		/* Verifica inicialmente se a envasadora existe no cadastro */
 		Boolean envasadoraExisteCadastro = comunicacaoGraficasRepository
 				.verificaEnvasadoraExisteCadastro(dto.getInscricaoEstadual());
 
@@ -79,14 +74,12 @@ public class ComunicacaoGraficasService {
 			throw new EnvasadoraRegrasException(MENSAGENSPADRAO.ENVASADORANAOEXISTE.getDesc(), 2);
 		}
 
-		/* Verifica se a envasadora possui situação cadastral ativa */
 		Boolean envasadoraCadastroAtivo = comunicacaoGraficasRepository
 				.verificaEnvasadoraSituacaoAtiva(dto.getInscricaoEstadual());
 		if (!envasadoraCadastroAtivo) {
 			throw new EnvasadoraRegrasException(MENSAGENSPADRAO.ENVASADORASITFISCINATIVA.getDesc(), 3);
 		}
 
-		/* Verifica se a envasadora possui o CNAE de envasamento */
 		Boolean envasadoraPossuiCnae = comunicacaoGraficasRepository
 				.verificaEnvasadoraPossuiCnae(dto.getInscricaoEstadual());
 		if (!envasadoraPossuiCnae) {
@@ -103,41 +96,32 @@ public class ComunicacaoGraficasService {
 
 		return new ListaCamposResponseDTO(listaCampos);
 	}
-
-	public RespostaPadrao solicitaCredenciamentoEnvasadora(SolicitacaoCredenciamentoDTO dto) {
-		//tokenGraficasService.verificaTokenGrafica(dto.getTokenGrafica());
-				
-		/*Será feita validação nos campos recebidos. Caso validado, os dados serão persistidos no banco*/
-		validacaoSolicitacaoCredenciamento.validacaoDadosSolicitacaoCredenciamento(dto);
+*/
+	/*public RespostaPadrao solicitaCredenciamentoEnvasadora(DadosSolicitacaoDTO dto) {
 		
-		/*Salvar credenciamento*/
+		this.validacaoSolicitacaoCredenciamento.validacaoDadosSolicitacaoCredenciamento(dto);
+		
+		
 		Credenciamento credenciamento = this.salvaSolicitacaoCredenciamento(dto);
-		return new RespostaPadrao(
-				"Solicitação de credenciamento salva com sucesso! Código da solicitação: " + credenciamento.getId().toString(),
-				1,
-				true
-				);		
-	}
+		return new RespostaPadrao("Solicitação de credenciamento salva com sucesso! Código da solicitação: "
+				+ credenciamento.getId().toString(), 1, true);
+	}*/
 
-	@Transactional
-	private Credenciamento salvaSolicitacaoCredenciamento(SolicitacaoCredenciamentoDTO dto) {
+//	@Transactional
+	/*private Credenciamento salvaSolicitacaoCredenciamento(DadosSolicitacaoDTO dto) {
 
-		/* Informações gerais do credenciamento */
 
 		Credenciamento credenciamento = this.montaCredenciamento(dto);
 
-		/* Informações de pedido */
 		PedidoCredenciamento pedidoCredenciamento = this.montaPedido(dto, credenciamento);
 
-		/* Informações sobre a lista de produtos */
 		List<PedidoProduto> listaProdutos = dto.getListaProdutos().stream()
 				.map(item -> new PedidoProduto(item, pedidoCredenciamento)).collect(Collectors.toList());
 		pedidoCredenciamento.setListaProdutos(listaProdutos);
 
-		/*Informações sobre lista de campos enviados - textuais e arquivos*/
 		List<PedidoCampoForm> listaCampos = this.montaListaCamposForm(dto, pedidoCredenciamento);
 		pedidoCredenciamento.setListaPedidoCampos(listaCampos);
-		
+
 		System.out.println(credenciamento.toString());
 
 		try {
@@ -145,41 +129,42 @@ public class ComunicacaoGraficasService {
 		} catch (Exception e) {
 			throw new SolicitacaoCredenciamentoException(e.getMessage());
 		}
-				
-	}
 
-	private Credenciamento montaCredenciamento(SolicitacaoCredenciamentoDTO dto) {
+	}*/
+
+	/*private Credenciamento montaCredenciamento(DadosSolicitacaoDTO dto) {
 		Credenciamento credenciamento = new Credenciamento();
+
+		String cnpjEnvasadora = dto.getCadastro().getCnpj(); 
 		
-		
-		String cnpjEnvasadora = UtilsAguaLegal.extracaoDadosListaCampos("CNPJ", dto);
-		/*Verificar se existe alguma solicitação de credenciamento vigente para aquele cnpj*/
 		Integer solicitacoes = credenciamentoRepository.verificaSolicitacaoVigente(cnpjEnvasadora);
-		if(solicitacoes>0) {
-			throw new SolicitacaoCredenciamentoException("Já existe uma solicitação de credenciamento vigente para este CNPJ",1);
-		}		
+		if (solicitacoes > 0) {
+			throw new SolicitacaoCredenciamentoException(
+					"Já existe uma solicitação de credenciamento vigente para este CNPJ", 1);
+		}
 		credenciamento.setCnpj(cnpjEnvasadora);
 		credenciamento.setDataSolicitacao(new Date());
-		credenciamento.setInscricaoEstadual(Long.parseLong(dto.getInscricaoEstadual()));
+		credenciamento.setInscricaoEstadual(Long.parseLong(dto.getCadastro().getInscricaoEstadual()));
 		credenciamento.setStatus(1);// solicitado
-		
-		credenciamento.setRazaoSocial(UtilsAguaLegal.extracaoDadosListaCampos("Razão Social", dto));
-		
+
+		credenciamento.setRazaoSocial(dto.getCadastro().getRazaoSocial());
+
 		return credenciamento;
 
-	}
+	}*/
 
-	private PedidoCredenciamento montaPedido(SolicitacaoCredenciamentoDTO dto, Credenciamento credenciamento) {
+	/*private PedidoCredenciamento montaPedido(DadosSolicitacaoDTO dto, Credenciamento credenciamento) {
 		PedidoCredenciamento pedidoCredenciamento = new PedidoCredenciamento();
 		pedidoCredenciamento.setDataPedido(new Date());
-		pedidoCredenciamento.setCnpjGrafica(dto.getCnpjGrafica());
-		pedidoCredenciamento.setNomeGrafica(dto.getNomeGrafica());
+
+		pedidoCredenciamento.setCnpjGrafica("35113067000117");
+		pedidoCredenciamento.setNomeGrafica("GRAFICA E EDITORA SAO LUIS LTDA");
+
 		pedidoCredenciamento.setTipoPedido(1);
-		// Pendente - definir lógica de definição do vencimento
-		pedidoCredenciamento.setDataVencimento(this.defineDataVencimento(30));
+		pedidoCredenciamento.setDataVencimento(null);
 		pedidoCredenciamento.setNumeroPedido(this.defineNumeracaoPedido());
-		pedidoCredenciamento.setObservacao(
-				UtilsAguaLegal.extracaoDadosListaCampos("Observações da solicitação de credenciamento", dto));
+
+		pedidoCredenciamento.setObservacao(UtilsAguaLegal.isEmpty(dto.getObservacao()) ? "" : dto.getObservacao());
 		pedidoCredenciamento.setStatus(1);
 
 		pedidoCredenciamento.setCredenciamento(credenciamento);
@@ -187,47 +172,181 @@ public class ComunicacaoGraficasService {
 
 		return pedidoCredenciamento;
 	}
-
-	private List<PedidoCampoForm> montaListaCamposForm(SolicitacaoCredenciamentoDTO dto,
+*//*
+	private List<PedidoCampoForm> montaListaCamposForm(DadosSolicitacaoDTO dto,
 			PedidoCredenciamento pedidoCredenciamento) {
 
-		/* Campos textuais */
-		List<PedidoCampoForm> listaCamposTexto = dto.getListaCampos().stream().map(item -> {
-			PedidoCampoForm pedidoCampoForm = new PedidoCampoForm();
-			pedidoCampoForm.setPedidoCredenciamento(pedidoCredenciamento);
+		List<CampoFormulario> listaCamposConfigurados = campoFormularioRepository.findAll();
+		List<PedidoCampoForm> listaPedidos = new ArrayList<>();
 
-			Optional<CampoFormulario> campoFind = campoFormularioRepository
-					.findCampoFormularioByNomeCriterio(item.getNomeCampo());
-			if (!campoFind.isPresent()) {
-				throw new EnvasadoraRegrasException(
-						MENSAGENSPADRAO.CAMPONAOENCONTRADO.getDesc() + " - " + item.getNomeCampo(), 2);
-			}
-			pedidoCampoForm.setCampoFormulario(campoFind.get());
-			pedidoCampoForm.setValorCampo(item.getConteudoCampo());
+		List<PedidoCampoForm> listaPedidosCadastro = this.montaListaPedidosCampoFormCadastro(dto.getCadastro(),
+				pedidoCredenciamento, listaCamposConfigurados);
+		List<PedidoCampoForm> listaPedidosResponsavel = this.montaListaPedidosCampoResponsavelCadastro(
+				dto.getResponsavel(), pedidoCredenciamento, listaCamposConfigurados);
+		List<PedidoCampoForm> listaPedidosLicenca = this.montaPedidosLicenca(dto, pedidoCredenciamento,
+				listaCamposConfigurados);
+		List<PedidoCampoForm> listaEndereco = this.montaListaPedidosCampoFormEndereco(dto, pedidoCredenciamento,
+				listaCamposConfigurados);
+		List<PedidoCampoForm> listaRestantes = this.montaListaItensRestantes(dto, pedidoCredenciamento, listaCamposConfigurados);
+		
+		listaPedidos.addAll(listaPedidosCadastro);
+		listaPedidos.addAll(listaPedidosResponsavel);
+		listaPedidos.addAll(listaPedidosLicenca);
+		listaPedidos.addAll(listaEndereco);
+		listaPedidos.addAll(listaRestantes);		
+		
+		return listaPedidos;
+	}*/
 
-			return pedidoCampoForm;
-		}).collect(Collectors.toList());
+/*	private List<PedidoCampoForm> montaListaItensRestantes(DadosSolicitacaoDTO dto,
+			PedidoCredenciamento pedidoCredenciamento, List<CampoFormulario> listaCamposConfigurados) {
 
-		/* Campos de arquivos enviados através do DTO */
-		List<PedidoCampoForm> listaCamposArquivo = dto.getListaArquivos().stream().map(item -> {
-			PedidoCampoForm pedidoCampoForm = new PedidoCampoForm();
-			pedidoCampoForm.setPedidoCredenciamento(pedidoCredenciamento);
-
-			Optional<CampoFormulario> campoFind = campoFormularioRepository
-					.findCampoFormularioByNomeCriterio(item.getNomeCampo());
-			if (!campoFind.isPresent()) {
-				throw new EnvasadoraRegrasException(
-						MENSAGENSPADRAO.CAMPONAOENCONTRADO.getDesc() + " - " + item.getNomeCampo(), 2);
-			}
-			pedidoCampoForm.setCampoFormulario(campoFind.get());
-			pedidoCampoForm.setConteudoArquivo(item.getFile());
-
-			return pedidoCampoForm;
-		}).collect(Collectors.toList());
 		List<PedidoCampoForm> listaRetorno = new ArrayList<>();
-		listaRetorno.addAll(listaCamposArquivo);
-		listaRetorno.addAll(listaCamposTexto);
+
+		PedidoCampoForm pedidoCampoFormTipoAgua = new PedidoCampoForm(pedidoCredenciamento, dto.getTipoAgua(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(19L))
+						.collect(Collectors.toList()).get(0));
+		listaRetorno.add(pedidoCampoFormTipoAgua);
+
+		if (!UtilsAguaLegal.isEmpty(dto.getObservacao())) {
+			PedidoCampoForm pedidoCampoFormObservacao = new PedidoCampoForm(pedidoCredenciamento, dto.getObservacao(),
+					listaCamposConfigurados.stream().filter(item -> item.getId().equals(20L))
+							.collect(Collectors.toList()).get(0));
+			listaRetorno.add(pedidoCampoFormObservacao);
+		}
+
 		return listaRetorno;
+	}
+
+	private List<PedidoCampoForm> montaPedidosLicenca(DadosSolicitacaoDTO dto,
+			PedidoCredenciamento pedidoCredenciamento, List<CampoFormulario> listaCamposConfigurados) {
+
+		List<PedidoCampoForm> listaCampoForms = new ArrayList<>();
+
+		PedidoCampoForm pedidoCampoFormEmissorLicenca = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getLicencaVigilancia().getEmissor(),
+				listaCamposConfigurados.stream()
+						.filter(item -> item.getId().equals(10L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormNumeroLicenca = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getLicencaVigilancia().getNumero(),
+				listaCamposConfigurados.stream()
+						.filter(item -> item.getId().equals(12L))			
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormImagemLicenca = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getLicencaVigilancia().getImagem(),
+				listaCamposConfigurados.stream()
+						.filter(item -> item.getId().equals(11L))
+						.collect(Collectors.toList()).get(0));
+
+		listaCampoForms.addAll(Arrays.asList(pedidoCampoFormEmissorLicenca, pedidoCampoFormNumeroLicenca,
+				pedidoCampoFormImagemLicenca));
+
+		if (dto.getLicencaMineracao() != null) {
+			PedidoCampoForm pedidoCampoFormNumeroLicencaMineracao = new PedidoCampoForm(pedidoCredenciamento,
+					dto.getLicencaMineracao().getNumero(),
+					listaCamposConfigurados.stream()
+							.filter(item -> item.getId().equals(14L))
+							.collect(Collectors.toList()).get(0));
+
+			PedidoCampoForm pedidoCampoFormImagemLicencaMineracao = new PedidoCampoForm(pedidoCredenciamento,
+					dto.getLicencaMineracao().getImagem(),
+					listaCamposConfigurados.stream()
+							.filter(item -> item.getId().equals(13L))
+							.collect(Collectors.toList()).get(0));
+
+			listaCampoForms.addAll(
+					Arrays.asList(pedidoCampoFormNumeroLicencaMineracao, pedidoCampoFormImagemLicencaMineracao));
+		}
+
+		return listaCampoForms;
+
+	}
+
+	private List<PedidoCampoForm> montaListaPedidosCampoFormCadastro(CadastroDTO dto,
+			PedidoCredenciamento pedidoCredenciamento, List<CampoFormulario> listaCamposConfigurados) {
+
+		PedidoCampoForm pedidoCampoFormCnpj = new PedidoCampoForm(pedidoCredenciamento, dto.getCnpj(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(1L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormRazaoSocial = new PedidoCampoForm(pedidoCredenciamento, dto.getRazaoSocial(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(2L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormInscricaoEstadual = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getInscricaoEstadual(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(4L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormNomeFantasia = new PedidoCampoForm(pedidoCredenciamento, dto.getNomeFantasia(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(3L))
+						.collect(Collectors.toList()).get(0));
+
+		return Arrays.asList(pedidoCampoFormCnpj, pedidoCampoFormInscricaoEstadual, pedidoCampoFormNomeFantasia,
+				pedidoCampoFormRazaoSocial);
+
+	}
+
+	private List<PedidoCampoForm> montaListaPedidosCampoFormEndereco(DadosSolicitacaoDTO dto,
+			PedidoCredenciamento pedidoCredenciamento, List<CampoFormulario> listaCamposConfigurados) {
+
+		PedidoCampoForm pedidoCampoFormEnderecoEnvasadora = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getEnderecoEnvasador(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(15L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormCoordenadasEnvasadora = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getCoordenadasEnvasador(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(16L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormEnderecoLocalEnvase = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getEnderecoEnvase(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(17L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormCoordenadasEnvase = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getCoordenadasEnvase(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(18L))
+						.collect(Collectors.toList()).get(0));
+
+		return Arrays.asList(pedidoCampoFormEnderecoEnvasadora, pedidoCampoFormCoordenadasEnvasadora,
+				pedidoCampoFormEnderecoLocalEnvase, pedidoCampoFormCoordenadasEnvase);
+
+	}
+
+	private List<PedidoCampoForm> montaListaPedidosCampoResponsavelCadastro(ResponsavelDTO dto,
+			PedidoCredenciamento pedidoCredenciamento, List<CampoFormulario> listaCamposConfigurados) {
+
+		PedidoCampoForm pedidoCampoFormNomeResponsavel = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getNomeResponsavel(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(5L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormEmailResponsavel = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getEmailResponsavel(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(6L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormRgResponsavel = new PedidoCampoForm(pedidoCredenciamento, dto.getRgResponsavel(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(7L))
+						.collect(Collectors.toList()).get(0));
+
+		PedidoCampoForm pedidoCampoFormCpfResponsavel = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getCpfResponsavel(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(8L))
+						.collect(Collectors.toList()).get(0));
+		PedidoCampoForm pedidoCampoFormTelefoneResponsavel = new PedidoCampoForm(pedidoCredenciamento,
+				dto.getTelefoneResponsavel(),
+				listaCamposConfigurados.stream().filter(item -> item.getId().equals(9L))
+						.collect(Collectors.toList()).get(0));
+
+		return Arrays.asList(pedidoCampoFormNomeResponsavel, pedidoCampoFormEmailResponsavel,
+				pedidoCampoFormRgResponsavel, pedidoCampoFormCpfResponsavel, pedidoCampoFormTelefoneResponsavel);
+
 	}
 
 	public Date defineDataVencimento(int days) {
@@ -239,5 +358,5 @@ public class ComunicacaoGraficasService {
 	public Long defineNumeracaoPedido() {
 		return 123456L;
 	}
-
+*/
 }

@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
-@Table(name = "TAB_IE_EXCECAO")
+//@Entity
+//@Table(name = "TAB_IE_EXCECAO")
 public class IeExcecao {
 
 	@Id
