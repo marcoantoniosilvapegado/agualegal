@@ -5,7 +5,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import br.gov.go.sefaz.agualegal.repositorynew.CampoFormularioRepository;
+import br.gov.go.sefaz.agualegal.repository.CampoFormularioRepository;
 
 @SpringBootApplication
 public class AgualegalApplication implements CommandLineRunner 

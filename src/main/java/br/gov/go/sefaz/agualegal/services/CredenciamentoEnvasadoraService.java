@@ -6,25 +6,27 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.gov.go.sefaz.agualegal.domain.DadosReponsavelPersistencia;
+import br.gov.go.sefaz.agualegal.domain.EnvasadoraPersistencia;
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
-import br.gov.go.sefaz.agualegal.modelonew.Credenciamento;
-import br.gov.go.sefaz.agualegal.modelonew.DadosPedido;
-import br.gov.go.sefaz.agualegal.modelonew.Envasadora;
-import br.gov.go.sefaz.agualegal.modelonew.Grafica;
-import br.gov.go.sefaz.agualegal.modelonew.PedidoCredenciamento;
-import br.gov.go.sefaz.agualegal.modelonew.StatusCredenciamento;
-import br.gov.go.sefaz.agualegal.modelonew.TipoAgua;
-import br.gov.go.sefaz.agualegal.repositorynew.CredenciamentoRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.DadosPedidoRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.EnvasadoraRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.GraficaRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.PedidoCredenciamentoRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.StatusAnaliseRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.StatusCredenciamentoRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.TipoAguaRepository;
-import br.gov.go.sefaz.agualegal.repositorynew.TipoPedidoRepository;
+import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
+import br.gov.go.sefaz.agualegal.modelo.DadosPedido;
+import br.gov.go.sefaz.agualegal.modelo.Envasadora;
+import br.gov.go.sefaz.agualegal.modelo.Grafica;
+import br.gov.go.sefaz.agualegal.modelo.PedidoCredenciamento;
+import br.gov.go.sefaz.agualegal.modelo.StatusCredenciamento;
+import br.gov.go.sefaz.agualegal.modelo.TipoAgua;
+import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
+import br.gov.go.sefaz.agualegal.repository.DadosPedidoRepository;
+import br.gov.go.sefaz.agualegal.repository.EnvasadoraRepository;
+import br.gov.go.sefaz.agualegal.repository.GraficaRepository;
+import br.gov.go.sefaz.agualegal.repository.PedidoCredenciamentoRepository;
+import br.gov.go.sefaz.agualegal.repository.StatusAnaliseRepository;
+import br.gov.go.sefaz.agualegal.repository.StatusCredenciamentoRepository;
+import br.gov.go.sefaz.agualegal.repository.TipoAguaRepository;
+import br.gov.go.sefaz.agualegal.repository.TipoPedidoRepository;
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 @Service
@@ -39,14 +41,14 @@ public class CredenciamentoEnvasadoraService {
 	private TipoPedidoRepository tipoPedidoRepository;
 	private PedidoCredenciamentoRepository pedidoCredenciamentoRepository;
 	private DadosPedidoRepository dadosPedidoRepository;
-	private ValidacaoSolicitacaoCredenciamentoNew validacaoSolicitacaoCredenciamentoNew;
+	private ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamentoNew;
 
 	public CredenciamentoEnvasadoraService(EnvasadoraRepository envasadoraRepository,
 			TipoAguaRepository tipoAguaRepository, StatusCredenciamentoRepository statusCredenciamentoRepository,
 			CredenciamentoRepository credenciamentoRepository, GraficaRepository graficaRepository,
 			StatusAnaliseRepository statusAnaliseRepository, TipoPedidoRepository tipoPedidoRepository,
 			PedidoCredenciamentoRepository pedidoCredenciamentoRepository, DadosPedidoRepository dadosPedidoRepository,
-			ValidacaoSolicitacaoCredenciamentoNew validacaoSolicitacaoCredenciamentoNew) {
+			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamentoNew) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
 		this.tipoAguaRepository = tipoAguaRepository;
@@ -88,21 +90,31 @@ public class CredenciamentoEnvasadoraService {
 		Envasadora envasadora = this.persistenciaEnvasadora(dto, tipoAgua);
 		Credenciamento credenciamento = persistenciaCredenciamento(dto, envasadora);
 		PedidoCredenciamento pedido = persistenciaPedidoCredenciamento(dto, credenciamento);
-		persistenciaDadosPedido(dto, pedido);
+		persistenciaDadosPedido(dto, pedido, envasadora);
 
 		return new RespostaPadrao("Solicitação de credenciamento salva com sucesso! Código da solicitação: "
 				+ credenciamento.getIdCredenciamento(), 1, true);
 	}
 
-	private DadosPedido persistenciaDadosPedido(DadosSolicitacaoDTO dto, PedidoCredenciamento pedido) {
+	private DadosPedido persistenciaDadosPedido(DadosSolicitacaoDTO dto, PedidoCredenciamento pedido,
+			Envasadora envasadora) {
 		DadosPedido dadosPedido = new DadosPedido();
-
+		DadosReponsavelPersistencia dadosReponsavelPersistencia;
 		dadosPedido.setPedidoCredenciamento(pedido);
 
-		dadosPedido.setJsonResponsavel(UtilsAguaLegal.toJson(dto.getResponsavel()));
-		dadosPedido.setJsonEnvasadora(UtilsAguaLegal.toJson(dto.getCadastro()));
+		if (dto.getResponsavel() != null) {
+			dadosReponsavelPersistencia = new DadosReponsavelPersistencia(dto.getResponsavel(),
+					envasadora.getIdEnvasadora().toString());
+			dadosPedido.setJsonResponsavel(UtilsAguaLegal.toJson(dadosReponsavelPersistencia));
+		}
+
+		dadosPedido.setJsonEnvasadora(UtilsAguaLegal.toJson(new EnvasadoraPersistencia(dto.getCadastro(),
+				dto.getEnderecoDTO(), dto.getTipoAgua(), envasadora.getIdEnvasadora().toString())));
+
 		dadosPedido.setJsonProdutos(UtilsAguaLegal.toJson(dto.getListaProdutos()));
+
 		dadosPedido.setJsonLicencas(UtilsAguaLegal.toJson(dto.getListaLicencas()));
+
 		return this.dadosPedidoRepository.save(dadosPedido);
 
 	}

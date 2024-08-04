@@ -3,7 +3,7 @@ package br.gov.go.sefaz.agualegal.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import br.gov.go.sefaz.agualegal.modelonew.CampoFormulario;
+import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 
 public class CampoResponseDTO implements Serializable {
 
