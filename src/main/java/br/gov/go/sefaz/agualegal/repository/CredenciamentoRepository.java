@@ -1,5 +1,7 @@
 package br.gov.go.sefaz.agualegal.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -29,4 +31,8 @@ public interface CredenciamentoRepository extends JpaRepository<Credenciamento, 
 			+ "and tc.id_status_credenciamento=1\r\n"
 			+ "and (tc.data_fim is null or trunc(tc.data_fim)>trunc(sysdate))", nativeQuery = true)
 	public Integer verificaCredeciamentoAtivo(String cnpjEnvasadora);
+	
+	
+	@Query(value = "select c from Credenciamento c where c.envasadora.cnpj = :cnpjEnvasadora")
+	public Credenciamento buscaRegistroCredenciamentoAtivo(String cnpjEnvasadora);
 }

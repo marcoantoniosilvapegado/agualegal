@@ -1,5 +1,6 @@
 package br.gov.go.sefaz.agualegal.modelo;
 
+import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TAB_ANALISE_PEDIDO")
 public class AnalisePedido {
-		
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_analise_pedido")
 	@SequenceGenerator(name = "seq_analise_pedido", sequenceName = "seq_tab_analise_pedido", allocationSize = 1)
@@ -23,7 +24,7 @@ public class AnalisePedido {
 	private Integer idAnalisePedido;
 
 	@Column(name = "data_analise")
-	private java.sql.Date dataAnalise;
+	private Date dataAnalise;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_analise", nullable = false)
@@ -42,7 +43,7 @@ public class AnalisePedido {
 	private PedidoCredenciamento pedidoCredenciamento;
 
 	public AnalisePedido() {
-		
+
 	}
 
 	public Integer getIdAnalisePedido() {
@@ -53,11 +54,11 @@ public class AnalisePedido {
 		this.idAnalisePedido = idAnalisePedido;
 	}
 
-	public java.sql.Date getDataAnalise() {
+	public Date getDataAnalise() {
 		return dataAnalise;
 	}
 
-	public void setDataAnalise(java.sql.Date dataAnalise) {
+	public void setDataAnalise(Date dataAnalise) {
 		this.dataAnalise = dataAnalise;
 	}
 

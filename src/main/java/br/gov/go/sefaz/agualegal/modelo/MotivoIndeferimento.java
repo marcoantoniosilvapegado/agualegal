@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TAB_MOTIVO_INDEFERIMENTO")
 public class MotivoIndeferimento {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_motivo_indeferimento")
 	@SequenceGenerator(name = "seq_motivo_indeferimento", sequenceName = "seq_tab_motivo_indeferimento", allocationSize = 1)
@@ -23,7 +23,7 @@ public class MotivoIndeferimento {
 	private Integer idMotivoIndeferimento;
 
 	@Column(name = "motivo_indeferimento", nullable = false, length = 200)
-	private String motivoIndeferimento;
+	private String descricaoMotivo;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_analise")
@@ -41,14 +41,6 @@ public class MotivoIndeferimento {
 		this.idMotivoIndeferimento = idMotivoIndeferimento;
 	}
 
-	public String getMotivoIndeferimento() {
-		return motivoIndeferimento;
-	}
-
-	public void setMotivoIndeferimento(String motivoIndeferimento) {
-		this.motivoIndeferimento = motivoIndeferimento;
-	}
-
 	public TipoAnalise getTipoAnalise() {
 		return tipoAnalise;
 	}
@@ -57,15 +49,23 @@ public class MotivoIndeferimento {
 		this.tipoAnalise = tipoAnalise;
 	}
 
+	public String getDescricaoMotivo() {
+		return descricaoMotivo;
+	}
+
+	public void setDescricaoMotivo(String descricaoMotivo) {
+		this.descricaoMotivo = descricaoMotivo;
+	}
+
 	@Override
 	public String toString() {
-		return "MotivoIndeferimento [idMotivoIndeferimento=" + idMotivoIndeferimento + ", motivoIndeferimento="
-				+ motivoIndeferimento + ", tipoAnalise=" + tipoAnalise + "]";
+		return "MotivoIndeferimento [idMotivoIndeferimento=" + idMotivoIndeferimento + ", descricaoMotivo="
+				+ descricaoMotivo + ", tipoAnalise=" + tipoAnalise + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idMotivoIndeferimento, motivoIndeferimento, tipoAnalise);
+		return Objects.hash(descricaoMotivo, idMotivoIndeferimento, tipoAnalise);
 	}
 
 	@Override
@@ -77,8 +77,8 @@ public class MotivoIndeferimento {
 		if (getClass() != obj.getClass())
 			return false;
 		MotivoIndeferimento other = (MotivoIndeferimento) obj;
-		return Objects.equals(idMotivoIndeferimento, other.idMotivoIndeferimento)
-				&& Objects.equals(motivoIndeferimento, other.motivoIndeferimento)
+		return Objects.equals(descricaoMotivo, other.descricaoMotivo)
+				&& Objects.equals(idMotivoIndeferimento, other.idMotivoIndeferimento)
 				&& Objects.equals(tipoAnalise, other.tipoAnalise);
 	}
 

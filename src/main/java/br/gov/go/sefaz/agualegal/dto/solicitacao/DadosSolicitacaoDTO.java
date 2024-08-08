@@ -33,7 +33,7 @@ public class DadosSolicitacaoDTO implements Serializable {
 
 	private String observacao;
 
-//	@NotBlank(message = "É obrigatório informar o token da gráfica!")
+	@NotBlank(message = "É obrigatório informar o token da gráfica!")
 	private String tokenGrafica;
 
 	@NotBlank(message = "É obrigatório informar o cnpj da gráfica!")

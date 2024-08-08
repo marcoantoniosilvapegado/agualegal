@@ -65,4 +65,11 @@ public class AguaLegalExceptionHandler {
 		 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erros);		
 	}	
 	
+	@ExceptionHandler(ParametrosNaoConfiguradosException.class)
+	public ResponseEntity<RespostaPadrao> parametrosNaoConfigurados(ParametrosNaoConfiguradosException e, HttpServletRequest request){
+		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), 1, false);		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+	}
+	
+		
 }

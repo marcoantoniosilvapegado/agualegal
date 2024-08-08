@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.apache.commons.validator.routines.EmailValidator;
 import javax.imageio.ImageIO;
@@ -177,6 +178,13 @@ public class UtilsAguaLegal {
 
 		// Verifica os dígitos calculados com os dígitos informados
 		return cnpj.charAt(12) - '0' == firstCheckDigit && cnpj.charAt(13) - '0' == secondCheckDigit;
+	}
+
+	public static Integer generateSixDigitNumber() {
+		Random random = new Random();
+		// 100000 é o menor número de 6 dígitos e 900000 é a quantidade de números de 6
+		// dígitos a partir de 100000
+		return new Integer(100000 + random.nextInt(900000));
 	}
 
 }

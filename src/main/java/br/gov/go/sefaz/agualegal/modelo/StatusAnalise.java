@@ -21,7 +21,7 @@ public class StatusAnalise {
 	private Integer idStatusAnalise;
 
 	@Column(name = "status_analise", nullable = false, length = 50, unique = true)
-	private String statusAnalise;
+	private String descricaoStatus;
 
 	public StatusAnalise() {
 
@@ -35,22 +35,22 @@ public class StatusAnalise {
 		this.idStatusAnalise = idStatusAnalise;
 	}
 
-	public String getStatusAnalise() {
-		return statusAnalise;
+	public String getDescricaoStatus() {
+		return descricaoStatus;
 	}
 
-	public void setStatusAnalise(String statusAnalise) {
-		this.statusAnalise = statusAnalise;
+	public void setDescricaoStatus(String descricaoStatus) {
+		this.descricaoStatus = descricaoStatus;
 	}
 
 	@Override
 	public String toString() {
-		return "StatusAnalise [idStatusAnalise=" + idStatusAnalise + ", statusAnalise=" + statusAnalise + "]";
+		return "StatusAnalise [idStatusAnalise=" + idStatusAnalise + ", descricaoStatus=" + descricaoStatus + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idStatusAnalise, statusAnalise);
+		return Objects.hash(descricaoStatus, idStatusAnalise);
 	}
 
 	@Override
@@ -62,8 +62,8 @@ public class StatusAnalise {
 		if (getClass() != obj.getClass())
 			return false;
 		StatusAnalise other = (StatusAnalise) obj;
-		return Objects.equals(idStatusAnalise, other.idStatusAnalise)
-				&& Objects.equals(statusAnalise, other.statusAnalise);
+		return Objects.equals(descricaoStatus, other.descricaoStatus)
+				&& Objects.equals(idStatusAnalise, other.idStatusAnalise);
 	}
 
 }

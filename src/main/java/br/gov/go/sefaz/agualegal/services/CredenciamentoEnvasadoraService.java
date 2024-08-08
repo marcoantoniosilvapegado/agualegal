@@ -6,27 +6,40 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import br.gov.go.sefaz.agualegal.domain.DadosReponsavelPersistencia;
 import br.gov.go.sefaz.agualegal.domain.EnvasadoraPersistencia;
+import br.gov.go.sefaz.agualegal.domain.PreAnaliseResultado;
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
+import br.gov.go.sefaz.agualegal.domain.RespostaPreAnalise;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
+import br.gov.go.sefaz.agualegal.modelo.AnalisePedido;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 import br.gov.go.sefaz.agualegal.modelo.DadosPedido;
 import br.gov.go.sefaz.agualegal.modelo.Envasadora;
 import br.gov.go.sefaz.agualegal.modelo.Grafica;
+import br.gov.go.sefaz.agualegal.modelo.MotivoIndeferimento;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCredenciamento;
+import br.gov.go.sefaz.agualegal.modelo.StatusAnalise;
 import br.gov.go.sefaz.agualegal.modelo.StatusCredenciamento;
 import br.gov.go.sefaz.agualegal.modelo.TipoAgua;
+import br.gov.go.sefaz.agualegal.modelo.TipoAnalise;
+import br.gov.go.sefaz.agualegal.repository.AnalisePedidoRepository;
 import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.DadosPedidoRepository;
 import br.gov.go.sefaz.agualegal.repository.EnvasadoraRepository;
 import br.gov.go.sefaz.agualegal.repository.GraficaRepository;
+import br.gov.go.sefaz.agualegal.repository.MotivoIndeferimentoRepository;
 import br.gov.go.sefaz.agualegal.repository.PedidoCredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.StatusAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.StatusCredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoAguaRepository;
+import br.gov.go.sefaz.agualegal.repository.TipoAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoPedidoRepository;
+import br.gov.go.sefaz.agualegal.utils.ByteArrayToBase64TypeAdapter;
 import br.gov.go.sefaz.agualegal.utils.UtilsAguaLegal;
 
 @Service
@@ -41,14 +54,21 @@ public class CredenciamentoEnvasadoraService {
 	private TipoPedidoRepository tipoPedidoRepository;
 	private PedidoCredenciamentoRepository pedidoCredenciamentoRepository;
 	private DadosPedidoRepository dadosPedidoRepository;
-	private ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamentoNew;
+	private ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento;
+	private PreAnaliseService preAnaliseService;
+	private AnalisePedidoRepository analisePedidoRepository;
+	private TipoAnaliseRepository tipoAnaliseRepository;
+	private MotivoIndeferimentoRepository motivoIndeferimentoRepository;
 
 	public CredenciamentoEnvasadoraService(EnvasadoraRepository envasadoraRepository,
 			TipoAguaRepository tipoAguaRepository, StatusCredenciamentoRepository statusCredenciamentoRepository,
 			CredenciamentoRepository credenciamentoRepository, GraficaRepository graficaRepository,
 			StatusAnaliseRepository statusAnaliseRepository, TipoPedidoRepository tipoPedidoRepository,
 			PedidoCredenciamentoRepository pedidoCredenciamentoRepository, DadosPedidoRepository dadosPedidoRepository,
-			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamentoNew) {
+			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento,
+			PreAnaliseService preAnaliseService, AnalisePedidoRepository analisePedidoRepository,
+			TipoAnaliseRepository tipoAnaliseRepository,
+			MotivoIndeferimentoRepository motivoIndeferimentoRepository) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
 		this.tipoAguaRepository = tipoAguaRepository;
@@ -59,13 +79,20 @@ public class CredenciamentoEnvasadoraService {
 		this.tipoPedidoRepository = tipoPedidoRepository;
 		this.pedidoCredenciamentoRepository = pedidoCredenciamentoRepository;
 		this.dadosPedidoRepository = dadosPedidoRepository;
-		this.validacaoSolicitacaoCredenciamentoNew = validacaoSolicitacaoCredenciamentoNew;
+		this.validacaoSolicitacaoCredenciamento = validacaoSolicitacaoCredenciamento;
+		this.preAnaliseService = preAnaliseService;
+		this.tipoAnaliseRepository = tipoAnaliseRepository;
+		this.motivoIndeferimentoRepository = motivoIndeferimentoRepository;
+		this.analisePedidoRepository = analisePedidoRepository;
 	}
 
 	@Transactional
-	public RespostaPadrao solicitaCredenciamentoEnvasadora(DadosSolicitacaoDTO dto) {
+	public RespostaPreAnalise solicitaCredenciamentoEnvasadora(DadosSolicitacaoDTO dto) {
+		/*Pré análise*/
+		PreAnaliseResultado preAnalise = this.preAnaliseService.preAnaliseEnvasadora(dto);	
+
 		/* Validação dos dados recebidos na solicitação de credenciamento */
-		this.validacaoSolicitacaoCredenciamentoNew.validacaoDadosSolicitacaoCredenciamento(dto);
+		this.validacaoSolicitacaoCredenciamento.validacaoDadosSolicitacaoCredenciamento(dto);
 
 		TipoAgua tipoAgua = tipoAguaRepository.findById(Integer.parseInt(dto.getTipoAgua())).orElseThrow(
 				() -> new SolicitacaoCredenciamentoException("Tipo de água não encontrado: " + dto.getTipoAgua(), 1));
@@ -88,12 +115,50 @@ public class CredenciamentoEnvasadoraService {
 		}
 
 		Envasadora envasadora = this.persistenciaEnvasadora(dto, tipoAgua);
-		Credenciamento credenciamento = persistenciaCredenciamento(dto, envasadora);
-		PedidoCredenciamento pedido = persistenciaPedidoCredenciamento(dto, credenciamento);
+		Credenciamento credenciamento = persistenciaCredenciamento(dto, envasadora, preAnalise);
+		PedidoCredenciamento pedido = persistenciaPedidoCredenciamento(dto, credenciamento, preAnalise);
+		AnalisePedido analise = persistenciaPedidoPreAnalise(pedido, preAnalise);
 		persistenciaDadosPedido(dto, pedido, envasadora);
+		
+		if(!preAnalise.isDeferido()) {
+			return new RespostaPreAnalise(analise.getStatusAnalise().getDescricaoStatus(), analise.getMotivoIndeferimento().getDescricaoMotivo());
+		}
+		return new RespostaPreAnalise(analise.getStatusAnalise().getDescricaoStatus(), pedido.getIdPedidoCredenciamento());
+	}
 
-		return new RespostaPadrao("Solicitação de credenciamento salva com sucesso! Código da solicitação: "
-				+ credenciamento.getIdCredenciamento(), 1, true);
+	private AnalisePedido persistenciaPedidoPreAnalise(PedidoCredenciamento pedido, PreAnaliseResultado preAnaliseResultado) {
+		
+		AnalisePedido analisePedido = new AnalisePedido();
+		analisePedido.setPedidoCredenciamento(pedido);
+		analisePedido.setDataAnalise(new Date());
+		
+		Optional<TipoAnalise> tipoPreAnalise = this.tipoAnaliseRepository.findById(4);
+		if(tipoPreAnalise.isEmpty()) {
+			throw new SolicitacaoCredenciamentoException("A tabela de parametrização dos tipos de análise não está configurada corretamente");
+		}
+		
+		Optional<StatusAnalise> statusAnalise = this.statusAnaliseRepository.findById(
+				preAnaliseResultado.isDeferido()?2:3
+				);
+		if(statusAnalise.isEmpty()) {
+			throw new SolicitacaoCredenciamentoException("A tabela de status analise não está configurada corretamente");
+		}
+		
+		Optional<MotivoIndeferimento> motivo = null;
+		if(!preAnaliseResultado.isDeferido()) {
+			motivo = this.motivoIndeferimentoRepository.findById(preAnaliseResultado.getIdMotivoIndeferimento());
+			if(motivo.isEmpty()) {
+				throw new SolicitacaoCredenciamentoException("A tabela de motivos de indeferimento não está configurada corretamente");
+			}
+		}
+		if(!preAnaliseResultado.isDeferido()) {
+			analisePedido.setMotivoIndeferimento(motivo.get());
+		}
+		
+		analisePedido.setStatusAnalise(statusAnalise.get());
+		analisePedido.setTipoAnalise(tipoPreAnalise.get());
+		return this.analisePedidoRepository.save(analisePedido);
+		
 	}
 
 	private DadosPedido persistenciaDadosPedido(DadosSolicitacaoDTO dto, PedidoCredenciamento pedido,
@@ -110,17 +175,21 @@ public class CredenciamentoEnvasadoraService {
 
 		dadosPedido.setJsonEnvasadora(UtilsAguaLegal.toJson(new EnvasadoraPersistencia(dto.getCadastro(),
 				dto.getEnderecoDTO(), dto.getTipoAgua(), envasadora.getIdEnvasadora().toString())));
+		
+		  Gson gson = new GsonBuilder()
+	                .registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter())
+	                .create();
+		
+		dadosPedido.setJsonProdutos(gson.toJson(dto.getListaProdutos()));// UtilsAguaLegal.toJson(dto.getListaProdutos()));
 
-		dadosPedido.setJsonProdutos(UtilsAguaLegal.toJson(dto.getListaProdutos()));
-
-		dadosPedido.setJsonLicencas(UtilsAguaLegal.toJson(dto.getListaLicencas()));
+		dadosPedido.setJsonLicencas(gson.toJson(dto.getListaLicencas()));
 
 		return this.dadosPedidoRepository.save(dadosPedido);
 
 	}
 
 	private PedidoCredenciamento persistenciaPedidoCredenciamento(DadosSolicitacaoDTO dto,
-			Credenciamento credenciamento) {
+			Credenciamento credenciamento, PreAnaliseResultado preAnalise) {
 
 		Grafica grafica = this.graficaRepository.findByCnpj(dto.getCnpjGrafica())
 				.orElseThrow(() -> new SolicitacaoCredenciamentoException("Gráfica não encontrada na base!", 1));
@@ -129,23 +198,36 @@ public class CredenciamentoEnvasadoraService {
 
 		pedidoCredenciamento.setCredenciamento(credenciamento);
 		pedidoCredenciamento.setDataPedido(new Date());
-		pedidoCredenciamento.setNumeroPedido(123457);
+		pedidoCredenciamento.setNumeroPedido(UtilsAguaLegal.generateSixDigitNumber());
 
 		pedidoCredenciamento.setObservacao(UtilsAguaLegal.isEmpty(dto.getObservacao()) ? "" : dto.getObservacao());
 		pedidoCredenciamento.setGrafica(grafica);
-		pedidoCredenciamento.setStatusPedido(this.statusAnaliseRepository.findById(1).get());
+		
+		/*Se a pré análise foi indeferida, será salvo registro do pedido, já nascido indeferido*/
+		if(preAnalise.isDeferido()) {
+			pedidoCredenciamento.setStatusPedido(this.statusAnaliseRepository.findById(1).get());
+		}else {
+			pedidoCredenciamento.setStatusPedido(this.statusAnaliseRepository.findById(3).get());
+		}		
+		
 		pedidoCredenciamento.setTipoPedido(this.tipoPedidoRepository.findById(1).get());
 
 		return this.pedidoCredenciamentoRepository.save(pedidoCredenciamento);
 
 	}
 
-	private Credenciamento persistenciaCredenciamento(DadosSolicitacaoDTO dto, Envasadora envasadora) {
+	private Credenciamento persistenciaCredenciamento(DadosSolicitacaoDTO dto, Envasadora envasadora, PreAnaliseResultado preAnalise) {
 
 		/*
 		 * Registro de credenciamento nasce inativo. Ficará ativo se for deferido pelos
-		 * fiscais
+		 * fiscais. Se ja existe registro na tab_credenciamento para aquele cnpj, ele é devolvido.
 		 */
+		
+		Credenciamento credAtivo = 
+				this.credenciamentoRepository.buscaRegistroCredenciamentoAtivo(dto.getCadastro().getCnpj());
+		if(credAtivo != null) {
+			return credAtivo;
+		}
 		Optional<StatusCredenciamento> statusInativo = this.statusCredenciamentoRepository.findById(2);
 
 		Credenciamento credenciamento = new Credenciamento();

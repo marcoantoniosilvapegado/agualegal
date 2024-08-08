@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
+import br.gov.go.sefaz.agualegal.domain.RespostaPreAnalise;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.services.CredenciamentoEnvasadoraService;
 
@@ -19,16 +18,15 @@ public class CredenciamentoEnvasadoraController {
 
 	private CredenciamentoEnvasadoraService service;
 
-	public CredenciamentoEnvasadoraController(CredenciamentoEnvasadoraService service) {		
+	public CredenciamentoEnvasadoraController(CredenciamentoEnvasadoraService service) {
 		this.service = service;
 	}
-	
+
 	@PostMapping(value = "/solicitacao")
-	public ResponseEntity<RespostaPadrao> solicitarCredenciamentoEnvasadora(
-			@RequestBody @Valid DadosSolicitacaoDTO dto){			
-		RespostaPadrao resposta = this.service.solicitaCredenciamentoEnvasadora(dto);
+	public ResponseEntity<RespostaPreAnalise> solicitarCredenciamentoEnvasadora(
+			@RequestBody @Valid DadosSolicitacaoDTO dto) {
+		RespostaPreAnalise resposta = this.service.solicitaCredenciamentoEnvasadora(dto);
 		return new ResponseEntity<>(resposta, HttpStatus.OK);
-	}	
-	
+	}
 
 }

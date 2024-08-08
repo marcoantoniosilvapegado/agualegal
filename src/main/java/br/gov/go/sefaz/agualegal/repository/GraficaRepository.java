@@ -11,4 +11,6 @@ import br.gov.go.sefaz.agualegal.modelo.Grafica;
 public interface GraficaRepository extends JpaRepository<Grafica, Integer> {
 	
 	Optional<Grafica> findByCnpj(String cnpj);
+	
+	Optional<Grafica> findByTokenAndCnpj(String token, String cnpj);
 }

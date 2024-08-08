@@ -30,8 +30,62 @@ public class Grafica {
 	@Column(name = "nome_fantasia", nullable = false, length = 200)
 	private String nomeFantasia;
 
+	@Column(name = "EMAIL", length = 50)
+	private String email;
+
+	@Column(name = "TELEFONE", length = 20)
+	private String telefone;
+
+	@Column(name = "INSCRICAO_ESTADUAL", length = 20)
+	private String inscricaoEstadual;
+
+	@Column(name = "CEP", length = 8)
+	private String cep;
+
+	@Column(name = "LOGRADOURO", length = 50)
+	private String logradouro;
+
+	@Column(name = "NUMERO", length = 5)
+	private String numero;
+
+	@Column(name = "COMPLEMENTO", length = 100)
+	private String complemento;
+
+	@Column(name = "BAIRRO", length = 50)
+	private String bairro;
+
+	@Column(name = "CIDADE", length = 50)
+	private String cidade;
+
+	@Column(name = "UF", length = 2)
+	private String uf;
+
+	@Column(name = "TOKEN", length = 50)
+	private String token;
+
 	public Grafica() {
-	
+		// TODO Auto-generated constructor stub
+	}
+
+	public Grafica(Integer idGrafica, String cnpj, String razaoSocial, String nomeFantasia, String email,
+			String telefone, String inscricaoEstadual, String cep, String logradouro, String numero, String complemento,
+			String bairro, String cidade, String uf, String token) {
+		super();
+		this.idGrafica = idGrafica;
+		this.cnpj = cnpj;
+		this.razaoSocial = razaoSocial;
+		this.nomeFantasia = nomeFantasia;
+		this.email = email;
+		this.telefone = telefone;
+		this.inscricaoEstadual = inscricaoEstadual;
+		this.cep = cep;
+		this.logradouro = logradouro;
+		this.numero = numero;
+		this.complemento = complemento;
+		this.bairro = bairro;
+		this.cidade = cidade;
+		this.uf = uf;
+		this.token = token;
 	}
 
 	public Integer getIdGrafica() {
@@ -66,15 +120,107 @@ public class Grafica {
 		this.nomeFantasia = nomeFantasia;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getInscricaoEstadual() {
+		return inscricaoEstadual;
+	}
+
+	public void setInscricaoEstadual(String inscricaoEstadual) {
+		this.inscricaoEstadual = inscricaoEstadual;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return cidade;
+	}
+
+	public void setCidade(String cidade) {
+		this.cidade = cidade;
+	}
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
 	@Override
 	public String toString() {
 		return "Grafica [idGrafica=" + idGrafica + ", cnpj=" + cnpj + ", razaoSocial=" + razaoSocial + ", nomeFantasia="
-				+ nomeFantasia + "]";
+				+ nomeFantasia + ", email=" + email + ", telefone=" + telefone + ", inscricaoEstadual="
+				+ inscricaoEstadual + ", cep=" + cep + ", logradouro=" + logradouro + ", numero=" + numero
+				+ ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + ", uf=" + uf
+				+ ", token=" + token + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cnpj, idGrafica, nomeFantasia, razaoSocial);
+		return Objects.hash(bairro, cep, cidade, cnpj, complemento, email, idGrafica, inscricaoEstadual, logradouro,
+				nomeFantasia, numero, razaoSocial, telefone, token, uf);
 	}
 
 	@Override
@@ -86,8 +232,15 @@ public class Grafica {
 		if (getClass() != obj.getClass())
 			return false;
 		Grafica other = (Grafica) obj;
-		return Objects.equals(cnpj, other.cnpj) && Objects.equals(idGrafica, other.idGrafica)
-				&& Objects.equals(nomeFantasia, other.nomeFantasia) && Objects.equals(razaoSocial, other.razaoSocial);
+		return Objects.equals(bairro, other.bairro) && Objects.equals(cep, other.cep)
+				&& Objects.equals(cidade, other.cidade) && Objects.equals(cnpj, other.cnpj)
+				&& Objects.equals(complemento, other.complemento) && Objects.equals(email, other.email)
+				&& Objects.equals(idGrafica, other.idGrafica)
+				&& Objects.equals(inscricaoEstadual, other.inscricaoEstadual)
+				&& Objects.equals(logradouro, other.logradouro) && Objects.equals(nomeFantasia, other.nomeFantasia)
+				&& Objects.equals(numero, other.numero) && Objects.equals(razaoSocial, other.razaoSocial)
+				&& Objects.equals(telefone, other.telefone) && Objects.equals(token, other.token)
+				&& Objects.equals(uf, other.uf);
 	}
 
 }

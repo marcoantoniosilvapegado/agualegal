@@ -150,7 +150,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 				errors.addError("Campo não informado", "Imagem da licença sanitária");
 			}
 		} else {
-			if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaVigilancia().getImagem()).equals("IMAGEM")) {
+			if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaVigilancia().getImagem()).equals("PDF")) {
 				errors.addError("Formato do campo não informado corretamente", "Imagem da licença sanitária");
 			} else {
 				if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaVigilancia().getImagem(), true)) {
@@ -166,7 +166,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 					errors.addError("Campo não informado", "Imagem da licença de mineração");
 				}
 			} else {
-				if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaMineracao().getImagem()).equals("IMAGEM")) {
+				if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaMineracao().getImagem()).equals("PDF")) {
 					errors.addError("Formato do campo não informado corretamente", "Imagem da licença mineração");
 				} else {
 					if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaMineracao().getImagem(), true)) {
@@ -293,11 +293,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 				.filter(item -> item.getCodigoCriterio().equals("NOMEFANTASIAENVASADORA")).collect(Collectors.toList())
 				.get(0);
 
-		CampoFormulario campoInscricao = list.stream()
-				.filter(item -> item.getCodigoCriterio().equals("INSCRICAOESTADUAL")).collect(Collectors.toList())
-				.get(0);
-
-		if (UtilsAguaLegal.isEmpty(dto.getCadastro().getCnpj())) {
+		/*if (UtilsAguaLegal.isEmpty(dto.getCadastro().getCnpj())) {
 			if (campoCnpj != null && campoCnpj.getCampoObrigatorio() == 'S') {
 				errors.addError("Campo não informado", "CNPJ envasadora");
 			}
@@ -305,7 +301,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 			if (!UtilsAguaLegal.verificaCnpjValido(dto.getCadastro().getCnpj())) {
 				errors.addError("Conteúdo do campo inválido", "CNPJ envasadora");
 			}
-		}
+		}*/
 
 		if (UtilsAguaLegal.isEmpty(dto.getCadastro().getRazaoSocial())
 				&& (campoRazao != null && campoRazao.getCampoObrigatorio() == 'S')) {
@@ -315,10 +311,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 				&& (campoNomeFantasia != null && campoNomeFantasia.getCampoObrigatorio() == 'S')) {
 			errors.addError("Campo não informado", "Nome Fantasia");
 		}
-		if (UtilsAguaLegal.isEmpty(dto.getCadastro().getInscricaoEstadual())
-				&& (campoInscricao != null && campoInscricao.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Inscrição Estadual");
-		}
+		
 	}
 
 	private void validaListaProdutos(List<ProdutoDTO> listaProdutos, ValidationError errors) {
