@@ -1,8 +1,6 @@
 package br.gov.go.sefaz.agualegal.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public class TokenRequestDTO {
 	

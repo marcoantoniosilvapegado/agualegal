@@ -1,6 +1,6 @@
 package br.gov.go.sefaz.agualegal.controller.docs;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -91,7 +91,8 @@ public interface ComunicacaoGraficasControllerDocumentable {
 			@Parameter(name = "cnpjGrafica", description = "CNPJ da gráfica intermediadora do procedimento de solicitação de credenciamento", required = true, schema = @Schema(type = "string")),
 			@Parameter(name = "listaCampos", description = "Lista de informações textuais solicitadas à empresa envasadora. ", required = true, schema = @Schema(implementation = CampoDTO.class)),
 			@Parameter(name = "listaArquivos", description = "Lista de arquivos (PDF, IMAGEM) solicitados à gráfica. ", required = true, schema = @Schema(implementation = ArquivoDTO.class)),
-			@Parameter(name = "listaProdutos", description = "Lista com informações referentes aos produtos oferecidos pela empresa envasadora. ", required = true, schema = @Schema(implementation = ProdutoDTO.class)) })
+			@Parameter(name = "listaProdutos", description = "Lista com informações referentes aos produtos oferecidos pela empresa envasadora. ", required = true, schema = @Schema(implementation = ProdutoDTO.class)) 
+			})
 	@ApiResponses(value = {
 			@ApiResponse(responseCode = "200", description = "OK: Solicitação de credenciamento efetuada com sucesso!", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RespostaPadrao.class))),
 			@ApiResponse(responseCode = "400", description = "Bad Request: Houve problema na solicitação de credenciamento!", content = @Content(mediaType = "application/json")),

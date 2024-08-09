@@ -12,15 +12,19 @@ public class RespostaPreAnalise implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String statusPedido;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private Integer codigoPedido;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private String motivoIndeferimento;
-
+	@JsonInclude(JsonInclude.Include.NON_NULL)
 	private boolean preAnaliseDeferida;
+
+	public RespostaPreAnalise(String motivoIndeferimento) {
+		super();
+		this.motivoIndeferimento = motivoIndeferimento;
+	}
 
 	public RespostaPreAnalise() {
 		// TODO Auto-generated constructor stub

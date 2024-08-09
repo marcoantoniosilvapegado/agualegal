@@ -2,7 +2,7 @@ package br.gov.go.sefaz.agualegal.exception;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
+import br.gov.go.sefaz.agualegal.domain.RespostaPreAnalise;
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class AguaLegalExceptionHandler {
@@ -42,8 +44,10 @@ public class AguaLegalExceptionHandler {
 	}
 	
 	@ExceptionHandler(SolicitacaoCredenciamentoException.class)
-	public ResponseEntity<RespostaPadrao> solicitacaoCredenciamento(SolicitacaoCredenciamentoException e, HttpServletRequest request){
-		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), e.getCodigo(), false);		
+	public ResponseEntity<RespostaPreAnalise> solicitacaoCredenciamento(SolicitacaoCredenciamentoException e, HttpServletRequest request){
+		//RespostaPadrao erro = //new RespostaPadrao(e.getMessage(), e.getCodigo(), false);
+		RespostaPreAnalise erro = new RespostaPreAnalise();
+		erro.setMotivoIndeferimento(e.getMessage());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
 	}
 	

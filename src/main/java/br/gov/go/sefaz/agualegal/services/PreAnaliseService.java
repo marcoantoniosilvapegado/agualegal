@@ -46,8 +46,10 @@ public class PreAnaliseService {
 		if (buscaCpfCnpjGrafica.isEmpty()) {
 			return new PreAnaliseResultado(false, 7);
 		}
+		
+		String tokenConvertidoMDS = UtilsAguaLegal.converteSHA256(dto.getTokenGrafica());
 		/* Valida se o token está correto */
-		Optional<Grafica> validaTokenGrafica = this.graficaRepository.findByTokenAndCnpj(dto.getTokenGrafica(),
+		Optional<Grafica> validaTokenGrafica = this.graficaRepository.findByTokenAndCnpj(tokenConvertidoMDS,
 				dto.getCnpjGrafica());
 		if (validaTokenGrafica.isEmpty()) {
 			return new PreAnaliseResultado(false, 8);

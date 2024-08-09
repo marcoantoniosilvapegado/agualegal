@@ -27,7 +27,6 @@ public class ValidacaoSolicitacaoCredenciamento {
 	private CampoFormularioRepository campoFormularioRepository;
 	private TipoAguaRepository tipoAguaRepository;
 	private EmissorLicencaRepository emissorLicencaRepository;
-	private GraficaRepository graficaRepository;
 
 	public ValidacaoSolicitacaoCredenciamento(CampoFormularioRepository campoFormularioRepository,
 			TipoAguaRepository tipoAguaRepository, EmissorLicencaRepository emissorLicencaRepository,
@@ -36,7 +35,6 @@ public class ValidacaoSolicitacaoCredenciamento {
 		this.campoFormularioRepository = campoFormularioRepository;
 		this.tipoAguaRepository = tipoAguaRepository;
 		this.emissorLicencaRepository = emissorLicencaRepository;
-		this.graficaRepository = graficaRepository;
 	}
 
 	public void validacaoDadosSolicitacaoCredenciamento(DadosSolicitacaoDTO dto) {
@@ -80,19 +78,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 				errors.addError("Tipo de água", "Tipo de água informado inválido");
 			}
 		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getCnpjGrafica())) {
-			errors.addError("Campo não informado", "CNPJ da Gráfica");
-		} else {
-			if (!UtilsAguaLegal.verificaCnpjValido(dto.getCnpjGrafica())) {
-				errors.addError("Conteúdo de campo inválido", "CNPJ gráfica");
-			} else {
-				if (this.graficaRepository.findByCnpj(dto.getCnpjGrafica()).isEmpty()) {
-					errors.addError("Gráfica não encontrada na base", "CNPJ gráfica");
-				}
-			}
-		}
-
+		
 	}
 
 	private void validaCamposFormulario(DadosSolicitacaoDTO dto, ValidationError errors) {
@@ -282,26 +268,13 @@ public class ValidacaoSolicitacaoCredenciamento {
 	private void validaCamposCadastroEnvasadora(DadosSolicitacaoDTO dto, ValidationError errors,
 			List<CampoFormulario> list) {
 
-		CampoFormulario campoCnpj = list.stream().filter(item -> item.getCodigoCriterio().equals("CNPJENVASADORA"))
-				.collect(Collectors.toList()).get(0);
-
 		CampoFormulario campoRazao = list.stream()
 				.filter(item -> item.getCodigoCriterio().equals("RAZAOSOCIALENVASADORA")).collect(Collectors.toList())
 				.get(0);
 
 		CampoFormulario campoNomeFantasia = list.stream()
 				.filter(item -> item.getCodigoCriterio().equals("NOMEFANTASIAENVASADORA")).collect(Collectors.toList())
-				.get(0);
-
-		/*if (UtilsAguaLegal.isEmpty(dto.getCadastro().getCnpj())) {
-			if (campoCnpj != null && campoCnpj.getCampoObrigatorio() == 'S') {
-				errors.addError("Campo não informado", "CNPJ envasadora");
-			}
-		} else {
-			if (!UtilsAguaLegal.verificaCnpjValido(dto.getCadastro().getCnpj())) {
-				errors.addError("Conteúdo do campo inválido", "CNPJ envasadora");
-			}
-		}*/
+				.get(0);		
 
 		if (UtilsAguaLegal.isEmpty(dto.getCadastro().getRazaoSocial())
 				&& (campoRazao != null && campoRazao.getCampoObrigatorio() == 'S')) {

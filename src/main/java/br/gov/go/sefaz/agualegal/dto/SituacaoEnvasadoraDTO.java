@@ -3,10 +3,7 @@ package br.gov.go.sefaz.agualegal.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import jakarta.validation.constraints.NotBlank;
 
 public class SituacaoEnvasadoraDTO implements Serializable{
 

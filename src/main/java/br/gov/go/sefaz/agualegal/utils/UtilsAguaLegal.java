@@ -5,18 +5,24 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import org.apache.commons.validator.routines.EmailValidator;
+
 import javax.imageio.ImageIO;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.tika.Tika;
 
 import com.google.gson.Gson;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 
 public class UtilsAguaLegal {
 
@@ -31,7 +37,7 @@ public class UtilsAguaLegal {
 	}
 
 	public static byte[] carregaBytes(String caminho) {
-		Path path = Paths.get(caminho);// ("C:\\Users\\marco.pegado\\Desktop\\arqs\\teste.pdf");
+		Path path = Paths.get(caminho);
 		try {
 			return Files.readAllBytes(path);
 		} catch (IOException e) {
@@ -180,11 +186,48 @@ public class UtilsAguaLegal {
 		return cnpj.charAt(12) - '0' == firstCheckDigit && cnpj.charAt(13) - '0' == secondCheckDigit;
 	}
 
+	// temporário para simular numero de pedido
 	public static Integer generateSixDigitNumber() {
 		Random random = new Random();
 		// 100000 é o menor número de 6 dígitos e 900000 é a quantidade de números de 6
 		// dígitos a partir de 100000
 		return new Integer(100000 + random.nextInt(900000));
 	}
+
+	public static String convertToMD5(String input) {
+		try {
+			// Cria a instância de MessageDigest para MD5
+			MessageDigest md = MessageDigest.getInstance("MD5");
+
+			// Converte a string para bytes e computa o hash
+			byte[] messageDigest = md.digest(input.getBytes());
+
+			// Converte os bytes para o formato hexadecimal
+			StringBuilder hexString = new StringBuilder();
+			for (byte b : messageDigest) {
+				hexString.append(String.format("%02x", b & 0xff));
+			}
+
+			return hexString.toString();
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	 public static String converteSHA256(String token) {
+	        try {
+	            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	            
+	            byte[] hashBytes = digest.digest(token.getBytes());
+	            
+	            StringBuilder hexString = new StringBuilder();
+	            for (byte b : hashBytes) {
+	                hexString.append(String.format("%02X", b)); 
+	            }	            
+	            return hexString.toString();
+	        } catch (NoSuchAlgorithmException e) {
+	            throw new RuntimeException("Erro ao calcular hash SHA-256", e);
+	        }
+	    }
 
 }
