@@ -1,7 +1,6 @@
 package br.gov.go.sefaz.agualegal.config;
 
-import org.springdoc.core.GroupedOpenApi;
-import org.springdoc.core.SwaggerUiConfigParameters;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +14,7 @@ public class SwaggerConfig {
 
 	@Bean
 	public GroupedOpenApi externalApi() {
-		return GroupedOpenApi.builder().group("externos")
-				.pathsToMatch("/**")
+		return GroupedOpenApi.builder().group("externos").pathsToMatch("/**")
 				.packagesToScan("br.gov.go.sefaz.agualegal.controller").build();
 	}
 
@@ -28,6 +26,5 @@ public class SwaggerConfig {
 						.email("suporte@sefaz.go.gov.br"))
 				.license(new License().name("Apache 2.0").url("http://springdoc.org")));
 	}
-	
 
 }

@@ -17,8 +17,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 
+@Tag(name = "Serviços de comunicação - Gráficas", description = "Serviço de pré-análise/solicitação de credenciamento de envasadora")
 public interface CredenciamentoEnvasadoraControllerDocumentable {
 	
 	@Operation(summary = "Pré-Análise/Solicitação de credenciamento", description = "Este serviço recebe os dados necessários para a execução da pré-analise fiscal, e da solicitação de credenciamento da empresa envasadora")

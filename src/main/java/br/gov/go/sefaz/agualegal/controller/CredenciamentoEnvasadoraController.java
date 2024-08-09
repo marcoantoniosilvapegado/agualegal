@@ -32,14 +32,5 @@ public class CredenciamentoEnvasadoraController implements CredenciamentoEnvasad
 		ResponseEntity<RespostaPreAnalise> 
 					resposta = this.service.solicitaCredenciamentoEnvasadora(dto);		
 		return  resposta;
-	}
-	
-	@PostMapping(value = "/teste")
-	public String teste(
-			
-			) {
-		System.out.println("teste");
-		return  "teste maner";
-	}
-
+	}	
 }
