@@ -13,7 +13,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TAB_CADASTRO_CNAE")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_CADASTRO_CNAE")
 public class CadastroCnae {
 
 	@Id

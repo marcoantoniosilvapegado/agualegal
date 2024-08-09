@@ -14,7 +14,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TAB_CAMPOS_FORMULARIO")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_CAMPOS_FORMULARIO")
 public class CampoFormulario {
 
 	@Id

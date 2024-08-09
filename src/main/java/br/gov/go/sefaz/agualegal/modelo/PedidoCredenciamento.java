@@ -16,7 +16,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "TAB_PEDIDO_CREDENCIAMENTO")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_PEDIDO_CREDENCIAMENTO")
 public class PedidoCredenciamento {
 
 	@Id

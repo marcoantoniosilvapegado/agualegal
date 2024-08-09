@@ -14,7 +14,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 @Entity
-@Table(name = "TAB_IE_EXCECAO")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_IE_EXCECAO")
 public class IeExcecao {
 
 	@Id

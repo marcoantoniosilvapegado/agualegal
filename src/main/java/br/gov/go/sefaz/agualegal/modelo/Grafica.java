@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "TAB_GRAFICA", uniqueConstraints = { @UniqueConstraint(columnNames = { "cnpj", "razao_social" }) })
+@Table(schema = "APL_AGUALEGAL", name = "TAB_GRAFICA", uniqueConstraints = { @UniqueConstraint(columnNames = { "cnpj", "razao_social" }) })
 public class Grafica {
 
 	@Id

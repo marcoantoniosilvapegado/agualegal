@@ -11,7 +11,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TAB_EMISSOR_LICENCA")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_EMISSOR_LICENCA")
 public class EmissorLicenca {
 
 	@Id

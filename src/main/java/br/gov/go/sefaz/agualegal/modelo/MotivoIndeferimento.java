@@ -13,7 +13,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TAB_MOTIVO_INDEFERIMENTO")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_MOTIVO_INDEFERIMENTO")
 public class MotivoIndeferimento {
 
 	@Id

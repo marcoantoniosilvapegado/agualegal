@@ -11,7 +11,7 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TAB_PAR_PRE_ANALISE")
+@Table(schema = "APL_AGUALEGAL", name = "TAB_PAR_PRE_ANALISE")
 public class ParPreAnalise {
 
 	@Id

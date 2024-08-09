@@ -16,7 +16,7 @@ import jakarta.persistence.UniqueConstraint;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.CadastroDTO;
 
 @Entity
-@Table(name = "TAB_ENVASADORA", uniqueConstraints = { @UniqueConstraint(columnNames = { "cnpj", "razao_social" }) })
+@Table(schema = "APL_AGUALEGAL", name = "TAB_ENVASADORA", uniqueConstraints = { @UniqueConstraint(columnNames = { "cnpj", "razao_social" }) })
 public class Envasadora {
 	
 	@Id
