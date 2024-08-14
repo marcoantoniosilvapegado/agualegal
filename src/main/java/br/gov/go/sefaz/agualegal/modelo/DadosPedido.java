@@ -19,7 +19,7 @@ public class DadosPedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_dados_pedido")
-	@SequenceGenerator(name = "seq_dados_pedido", sequenceName = "seq_tab_dados_pedido", allocationSize = 1)
+	@SequenceGenerator(name = "seq_dados_pedido", sequenceName = "APL_AGUALEGAL.seq_tab_dados_pedido", allocationSize = 1)
 	@Column(name = "id_dados_pedido")
 	private Integer idDadosPedido;
 

@@ -8,13 +8,10 @@ import br.gov.go.sefaz.agualegal.domain.PreAnaliseResultado;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.exception.ParametrosNaoConfiguradosException;
 import br.gov.go.sefaz.agualegal.exception.PreAnaliseException;
-import br.gov.go.sefaz.agualegal.modelo.Cadastro;
-import br.gov.go.sefaz.agualegal.modelo.CadastroCnae;
 import br.gov.go.sefaz.agualegal.modelo.Grafica;
 import br.gov.go.sefaz.agualegal.modelo.IeExcecao;
 import br.gov.go.sefaz.agualegal.modelo.ParPreAnalise;
-import br.gov.go.sefaz.agualegal.repository.CadastroCnaeRepository;
-import br.gov.go.sefaz.agualegal.repository.CadastroRepository;
+import br.gov.go.sefaz.agualegal.repository.ConsultaBaseSefazRepository;
 import br.gov.go.sefaz.agualegal.repository.GraficaRepository;
 import br.gov.go.sefaz.agualegal.repository.IeExcecaoRepository;
 import br.gov.go.sefaz.agualegal.repository.ParPreAnaliseRepository;
@@ -26,17 +23,16 @@ public class PreAnaliseService {
 	private GraficaRepository graficaRepository;
 	private IeExcecaoRepository ieExcecaoRepository;
 	private ParPreAnaliseRepository parPreAnaliseRepository;
-	private CadastroCnaeRepository cadastroCnaeRepository;
-	private CadastroRepository cadastroRepository;
+	private ConsultaBaseSefazRepository consultaBaseSefazRepository;
 
-	public PreAnaliseService(GraficaRepository graficaRepository, IeExcecaoRepository ieExcecaoRepository,
-			ParPreAnaliseRepository parPreAnaliseRepository, CadastroCnaeRepository cadastroCnaeRepository,
-			CadastroRepository cadastroRepository) {
+	public PreAnaliseService(GraficaRepository graficaRepository, 
+			IeExcecaoRepository ieExcecaoRepository,
+			ParPreAnaliseRepository parPreAnaliseRepository,
+			ConsultaBaseSefazRepository consultaBaseSefazRepository) {
 		this.graficaRepository = graficaRepository;
 		this.ieExcecaoRepository = ieExcecaoRepository;
 		this.parPreAnaliseRepository = parPreAnaliseRepository;
-		this.cadastroCnaeRepository = cadastroCnaeRepository;
-		this.cadastroRepository = cadastroRepository;
+		this.consultaBaseSefazRepository = consultaBaseSefazRepository;
 	}
 
 	public PreAnaliseResultado preAnaliseEnvasadora(DadosSolicitacaoDTO dto) throws PreAnaliseException {
@@ -86,24 +82,21 @@ public class PreAnaliseService {
 					parametros = parOptional.get();
 				}
 
-				if (parametros.getExisteSolicitante().equals("S")) {
-					Optional<Cadastro> buscaCnpj = this.cadastroRepository.findByCnpj(dto.getCadastro().getCnpj());
-					if (buscaCnpj.isEmpty()) {
+				if (parametros.getExisteSolicitante().equals("S")) {					
+					if (!consultaBaseSefazRepository.verificaEnvasadoraExiste(dto.getCadastro().getInscricaoEstadual())) {
 						return new PreAnaliseResultado(false, 10);
 					}
 
 				}
-				if (parametros.getSituacaoFiscAtiva().equals("S")) {
-					Optional<Cadastro> buscaSituacao = this.cadastroRepository
-							.findByCnpjAndSituacaoFiscal(dto.getCadastro().getCnpj(), 1);
-					if (buscaSituacao.isEmpty()) {
+				if (parametros.getSituacaoFiscAtiva().equals("S")) {					
+					if (!consultaBaseSefazRepository.verificaSituacaoFiscalAtiva(dto.getCadastro().getInscricaoEstadual())) {
 						return new PreAnaliseResultado(false, 11);
 					}
 				}
-				if (parametros.getPossuiCnae().equals("S")) {
-					CadastroCnae buscaCnae = this.cadastroCnaeRepository
-							.findByCnae(dto.getCadastro().getCnpj(), Long.parseLong(parametros.getCnaeEnvase()));
-					if (buscaCnae == null) {
+				if (parametros.getPossuiCnae().equals("S")) {					
+					if (!consultaBaseSefazRepository.verificaPossuiCnaeEnvase(dto.getCadastro().getInscricaoEstadual(),
+							parametros.getCnaeEnvase()
+							)) {
 						return new PreAnaliseResultado(false, 12);
 					}
 				}

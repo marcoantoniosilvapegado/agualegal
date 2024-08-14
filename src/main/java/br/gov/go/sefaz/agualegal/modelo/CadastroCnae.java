@@ -18,7 +18,7 @@ public class CadastroCnae {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CADASTRO_CNAE")
-	@SequenceGenerator(name = "SEQ_CADASTRO_CNAE", sequenceName = "SEQ_TAB_CADASTRO_CNAE", allocationSize = 1)
+	@SequenceGenerator(name = "SEQ_CADASTRO_CNAE", sequenceName = "APL_AGUALEGAL.SEQ_TAB_CADASTRO_CNAE", allocationSize = 1)
 	@Column(name = "ID_TAB_CADASTRO_CNAE", nullable = false)
 	private Integer id;
 

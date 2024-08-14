@@ -23,6 +23,7 @@ import br.gov.go.sefaz.agualegal.modelo.DadosPedido;
 import br.gov.go.sefaz.agualegal.modelo.Envasadora;
 import br.gov.go.sefaz.agualegal.modelo.Grafica;
 import br.gov.go.sefaz.agualegal.modelo.MotivoIndeferimento;
+import br.gov.go.sefaz.agualegal.modelo.MotivoIndeferimentoAnalise;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCredenciamento;
 import br.gov.go.sefaz.agualegal.modelo.StatusAnalise;
 import br.gov.go.sefaz.agualegal.modelo.StatusCredenciamento;
@@ -33,6 +34,7 @@ import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.DadosPedidoRepository;
 import br.gov.go.sefaz.agualegal.repository.EnvasadoraRepository;
 import br.gov.go.sefaz.agualegal.repository.GraficaRepository;
+import br.gov.go.sefaz.agualegal.repository.MotivoIndeferimentoAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.MotivoIndeferimentoRepository;
 import br.gov.go.sefaz.agualegal.repository.PedidoCredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.StatusAnaliseRepository;
@@ -59,6 +61,7 @@ public class CredenciamentoEnvasadoraService {
 	private PreAnaliseService preAnaliseService;
 	private AnalisePedidoRepository analisePedidoRepository;
 	private TipoAnaliseRepository tipoAnaliseRepository;
+	private MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository;
 	private MotivoIndeferimentoRepository motivoIndeferimentoRepository;
 
 	public CredenciamentoEnvasadoraService(EnvasadoraRepository envasadoraRepository,
@@ -68,7 +71,8 @@ public class CredenciamentoEnvasadoraService {
 			PedidoCredenciamentoRepository pedidoCredenciamentoRepository, DadosPedidoRepository dadosPedidoRepository,
 			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento, PreAnaliseService preAnaliseService,
 			AnalisePedidoRepository analisePedidoRepository, TipoAnaliseRepository tipoAnaliseRepository,
-			MotivoIndeferimentoRepository motivoIndeferimentoRepository) {
+			MotivoIndeferimentoRepository motivoIndeferimentoRepository, 
+			MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
 		this.tipoAguaRepository = tipoAguaRepository;
@@ -84,6 +88,7 @@ public class CredenciamentoEnvasadoraService {
 		this.tipoAnaliseRepository = tipoAnaliseRepository;
 		this.motivoIndeferimentoRepository = motivoIndeferimentoRepository;
 		this.analisePedidoRepository = analisePedidoRepository;
+		this.motivoIndeferimentoAnaliseRepository = motivoIndeferimentoAnaliseRepository;
 	}
 
 	@Transactional
@@ -123,13 +128,15 @@ public class CredenciamentoEnvasadoraService {
 		Envasadora envasadora = this.persistenciaEnvasadora(dto, tipoAgua);
 		Credenciamento credenciamento = persistenciaCredenciamento(dto, envasadora, preAnalise);
 		PedidoCredenciamento pedido = persistenciaPedidoCredenciamento(dto, credenciamento, preAnalise);
-		AnalisePedido analise = persistenciaPedidoPreAnalise(pedido, preAnalise);
+		AnalisePedido analise = persistenciaPedidoPreAnalise(pedido, preAnalise);	
+		MotivoIndeferimentoAnalise motivo = persistenciaMotivoIndeferimentoAnalise(analise, preAnalise);
+		
 		persistenciaDadosPedido(dto, pedido, envasadora);
 
 		if (!preAnalise.isDeferido()) {
 			return new ResponseEntity<RespostaPreAnalise>(
 					new RespostaPreAnalise(analise.getStatusAnalise().getDescricaoStatus(),
-							analise.getMotivoIndeferimento().getDescricaoMotivo()),
+							motivo.getMotivo().getDescricaoMotivo()),
 					HttpStatus.BAD_REQUEST);
 		}
 
@@ -137,6 +144,24 @@ public class CredenciamentoEnvasadoraService {
 				new RespostaPreAnalise(analise.getStatusAnalise().getDescricaoStatus(),
 						pedido.getIdPedidoCredenciamento()),
 				HttpStatus.OK);
+	}
+
+	private MotivoIndeferimentoAnalise persistenciaMotivoIndeferimentoAnalise(AnalisePedido analise,
+			PreAnaliseResultado preAnalise) {
+		Optional<MotivoIndeferimento> motivoIndeferimento = null;
+		MotivoIndeferimentoAnalise motivoIndeferimentoAnalise = new MotivoIndeferimentoAnalise();
+		if(!preAnalise.isDeferido()){
+			
+			motivoIndeferimento = this.motivoIndeferimentoRepository.findById(preAnalise.getIdMotivoIndeferimento());
+				if (motivoIndeferimento.isEmpty()) {
+					throw new SolicitacaoCredenciamentoException(
+							"A tabela de motivos de indeferimento não está configurada corretamente");
+				}				
+				motivoIndeferimentoAnalise.setMotivo(motivoIndeferimento.get());
+				motivoIndeferimentoAnalise.setAnaliseSolicitacao(analise);
+				return this.motivoIndeferimentoAnaliseRepository.save(motivoIndeferimentoAnalise);			
+		}		
+		return null;
 	}
 
 	private AnalisePedido persistenciaPedidoPreAnalise(PedidoCredenciamento pedido,
@@ -158,19 +183,7 @@ public class CredenciamentoEnvasadoraService {
 			throw new SolicitacaoCredenciamentoException(
 					"A tabela de status analise não está configurada corretamente");
 		}
-
-		Optional<MotivoIndeferimento> motivo = null;
-		if (!preAnaliseResultado.isDeferido()) {
-			motivo = this.motivoIndeferimentoRepository.findById(preAnaliseResultado.getIdMotivoIndeferimento());
-			if (motivo.isEmpty()) {
-				throw new SolicitacaoCredenciamentoException(
-						"A tabela de motivos de indeferimento não está configurada corretamente");
-			}
-		}
-		if (!preAnaliseResultado.isDeferido()) {
-			analisePedido.setMotivoIndeferimento(motivo.get());
-		}
-
+		
 		analisePedido.setStatusAnalise(statusAnalise.get());
 		analisePedido.setTipoAnalise(tipoPreAnalise.get());
 		return this.analisePedidoRepository.save(analisePedido);

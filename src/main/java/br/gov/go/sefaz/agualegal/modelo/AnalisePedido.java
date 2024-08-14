@@ -1,6 +1,8 @@
 package br.gov.go.sefaz.agualegal.modelo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -19,7 +22,7 @@ public class AnalisePedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_analise_pedido")
-	@SequenceGenerator(name = "seq_analise_pedido", sequenceName = "seq_tab_analise_pedido", allocationSize = 1)
+	@SequenceGenerator(name = "seq_analise_pedido", sequenceName = "APL_AGUALEGAL.seq_tab_analise_pedido", allocationSize = 1)
 	@Column(name = "id_analise_pedido")
 	private Integer idAnalisePedido;
 
@@ -34,9 +37,9 @@ public class AnalisePedido {
 	@JoinColumn(name = "id_status_analise", nullable = false)
 	private StatusAnalise statusAnalise;
 
-	@ManyToOne
-	@JoinColumn(name = "id_motivo_indeferimento")
-	private MotivoIndeferimento motivoIndeferimento;
+	@OneToMany
+	@JoinColumn(name = "ID_MOTIVO_INDEFERIMENTO")
+	private List<MotivoIndeferimento> motivoIndeferimento = new ArrayList<MotivoIndeferimento>();
 
 	@ManyToOne
 	@JoinColumn(name = "id_pedido_credenciamento", nullable = false)
@@ -78,14 +81,6 @@ public class AnalisePedido {
 		this.statusAnalise = statusAnalise;
 	}
 
-	public MotivoIndeferimento getMotivoIndeferimento() {
-		return motivoIndeferimento;
-	}
-
-	public void setMotivoIndeferimento(MotivoIndeferimento motivoIndeferimento) {
-		this.motivoIndeferimento = motivoIndeferimento;
-	}
-
 	public PedidoCredenciamento getPedidoCredenciamento() {
 		return pedidoCredenciamento;
 	}
@@ -94,32 +89,13 @@ public class AnalisePedido {
 		this.pedidoCredenciamento = pedidoCredenciamento;
 	}
 
-	@Override
-	public String toString() {
-		return "AnalisePedido [idAnalisePedido=" + idAnalisePedido + ", dataAnalise=" + dataAnalise + ", tipoAnalise="
-				+ tipoAnalise + ", statusAnalise=" + statusAnalise + ", motivoIndeferimento=" + motivoIndeferimento
-				+ ", pedidoCredenciamento=" + pedidoCredenciamento + "]";
+	public List<MotivoIndeferimento> getMotivoIndeferimento() {
+		return motivoIndeferimento;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(dataAnalise, idAnalisePedido, motivoIndeferimento, pedidoCredenciamento, statusAnalise,
-				tipoAnalise);
+	public void setMotivoIndeferimento(List<MotivoIndeferimento> motivoIndeferimento) {
+		this.motivoIndeferimento = motivoIndeferimento;
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		AnalisePedido other = (AnalisePedido) obj;
-		return Objects.equals(dataAnalise, other.dataAnalise) && Objects.equals(idAnalisePedido, other.idAnalisePedido)
-				&& Objects.equals(motivoIndeferimento, other.motivoIndeferimento)
-				&& Objects.equals(pedidoCredenciamento, other.pedidoCredenciamento)
-				&& Objects.equals(statusAnalise, other.statusAnalise) && Objects.equals(tipoAnalise, other.tipoAnalise);
-	}
+	
 
 }

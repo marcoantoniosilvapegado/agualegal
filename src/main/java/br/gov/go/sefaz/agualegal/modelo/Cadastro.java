@@ -16,7 +16,7 @@ public class Cadastro {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_CADASTRO")
-	@SequenceGenerator(name = "SEQ_CADASTRO", sequenceName = "SEQ_TAB_CADASTRO", allocationSize = 1)
+	@SequenceGenerator(name = "SEQ_CADASTRO", sequenceName = "APL_AGUALEGAL.SEQ_TAB_CADASTRO", allocationSize = 1)
 	@Column(name = "ID_CADASTRO", nullable = false)
 	private Integer id;
 

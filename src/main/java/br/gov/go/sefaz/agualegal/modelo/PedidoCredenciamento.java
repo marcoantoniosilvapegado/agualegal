@@ -21,7 +21,7 @@ public class PedidoCredenciamento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_pedido_credenciamento")
-	@SequenceGenerator(name = "seq_pedido_credenciamento", sequenceName = "seq_tab_pedido_credenciamento", allocationSize = 1)
+	@SequenceGenerator(name = "seq_pedido_credenciamento", sequenceName = "APL_AGUALEGAL.seq_tab_pedido_credenciamento", allocationSize = 1)
 	@Column(name = "id_pedido_credenciamento")
 	private Integer idPedidoCredenciamento;
 

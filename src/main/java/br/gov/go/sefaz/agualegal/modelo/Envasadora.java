@@ -21,7 +21,7 @@ public class Envasadora {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_envasadora")
-	@SequenceGenerator(name = "seq_envasadora", sequenceName = "seq_tab_envasadora", allocationSize = 1)
+	@SequenceGenerator(name = "seq_envasadora", sequenceName = "APL_AGUALEGAL.seq_tab_envasadora", allocationSize = 1)
 	@Column(name = "id_envasadora")
 	private Integer idEnvasadora;
 

@@ -19,7 +19,7 @@ public class CampoFormulario {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_campos_formulario")
-	@SequenceGenerator(name = "seq_campos_formulario", sequenceName = "seq_tab_campos_formulario", allocationSize = 1)
+	@SequenceGenerator(name = "seq_campos_formulario", sequenceName = "APL_AGUALEGAL.seq_tab_campos_formulario", allocationSize = 1)
 	@Column(name = "id_campo_formulario", nullable = false)
 	private Long idCampoFormulario;
 

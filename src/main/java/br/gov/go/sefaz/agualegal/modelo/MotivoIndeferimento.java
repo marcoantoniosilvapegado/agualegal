@@ -18,7 +18,7 @@ public class MotivoIndeferimento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_motivo_indeferimento")
-	@SequenceGenerator(name = "seq_motivo_indeferimento", sequenceName = "seq_tab_motivo_indeferimento", allocationSize = 1)
+	@SequenceGenerator(name = "seq_motivo_indeferimento", sequenceName = "APL_AGUALEGAL.seq_tab_motivo_indeferimento", allocationSize = 1)
 	@Column(name = "id_motivo_indeferimento")
 	private Integer idMotivoIndeferimento;
 

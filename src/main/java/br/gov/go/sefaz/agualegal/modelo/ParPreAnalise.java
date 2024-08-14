@@ -16,7 +16,7 @@ public class ParPreAnalise {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_par_pre_analise")
-	@SequenceGenerator(name = "seq_par_pre_analise", sequenceName = "SEQ_TAB_PAR_PRE_ANALISE", allocationSize = 1)
+	@SequenceGenerator(name = "seq_par_pre_analise", sequenceName = "APL_AGUALEGAL.SEQ_TAB_PAR_PRE_ANALISE", allocationSize = 1)
 	@Column(name = "ID_PAR_PRE_ANALISE", nullable = false)
 	private Integer id;
 

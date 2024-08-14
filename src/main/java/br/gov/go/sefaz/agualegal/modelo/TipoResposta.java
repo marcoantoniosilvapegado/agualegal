@@ -16,7 +16,7 @@ public class TipoResposta {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_tipo_resposta")
-	@SequenceGenerator(name = "seq_tipo_resposta", sequenceName = "seq_tab_tipo_resposta", allocationSize = 1)
+	@SequenceGenerator(name = "seq_tipo_resposta", sequenceName = "APL_AGUALEGAL.seq_tab_tipo_resposta", allocationSize = 1)
 	@Column(name = "id_tipo_resposta", nullable = false)
 	private Long idTipoResposta;
 

@@ -16,7 +16,7 @@ public class StatusAnalise {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_status_analise")
-	@SequenceGenerator(name = "seq_status_analise", sequenceName = "seq_tab_status_analise", allocationSize = 1)
+	@SequenceGenerator(name = "seq_status_analise", sequenceName = "APL_AGUALEGAL.seq_tab_status_analise", allocationSize = 1)
 	@Column(name = "id_status_analise")
 	private Integer idStatusAnalise;
 

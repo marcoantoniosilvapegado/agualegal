@@ -19,7 +19,7 @@ public class IeExcecao {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_ie_excecao")
-	@SequenceGenerator(name = "seq_ie_excecao", sequenceName = "SEQ_TAB_IE_EXCECAO", allocationSize = 1)
+	@SequenceGenerator(name = "seq_ie_excecao", sequenceName = "APL_AGUALEGAL.SEQ_TAB_IE_EXCECAO", allocationSize = 1)
 	@Column(name = "ID_IE_EXCECAO", nullable = false)
 	private Integer id;
 

@@ -20,7 +20,7 @@ public class LicencaEnvasadora {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_licenca_envasadora")
-	@SequenceGenerator(name = "seq_licenca_envasadora", sequenceName = "seq_tab_licenca_envasadora", allocationSize = 1)
+	@SequenceGenerator(name = "seq_licenca_envasadora", sequenceName = "APL_AGUALEGAL.seq_tab_licenca_envasadora", allocationSize = 1)
 	@Column(name = "id_licenca_envasadora")
 	private Integer idLicencaEnvasadora;
 

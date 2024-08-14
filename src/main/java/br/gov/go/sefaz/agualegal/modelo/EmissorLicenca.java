@@ -16,7 +16,7 @@ public class EmissorLicenca {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_emissor_licenca")
-	@SequenceGenerator(name = "seq_emissor_licenca", sequenceName = "seq_tab_emissor_licenca", allocationSize = 1)
+	@SequenceGenerator(name = "seq_emissor_licenca", sequenceName = "APL_AGUALEGAL.seq_tab_emissor_licenca", allocationSize = 1)
 	@Column(name = "id_emissor_licenca")
 	private Integer idEmissorLicenca;
 

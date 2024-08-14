@@ -17,7 +17,7 @@ public class Grafica {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_grafica")
-	@SequenceGenerator(name = "seq_grafica", sequenceName = "seq_tab_grafica", allocationSize = 1)
+	@SequenceGenerator(name = "seq_grafica", sequenceName = "APL_AGUALEGAL.seq_tab_grafica", allocationSize = 1)
 	@Column(name = "id_grafica")
 	private Integer idGrafica;
 
