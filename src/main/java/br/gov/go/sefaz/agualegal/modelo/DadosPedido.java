@@ -43,8 +43,12 @@ public class DadosPedido {
 	@Column(name = "json_produtos")
 	private String jsonProdutos;
 
+	@Lob
+	@Column(name = "json_campos_ativos")
+	private String jsonCampos;
+
 	public DadosPedido() {
-		
+
 	}
 
 	public Integer getIdDadosPedido() {
@@ -95,16 +99,17 @@ public class DadosPedido {
 		this.jsonProdutos = jsonProdutos;
 	}
 
-	@Override
-	public String toString() {
-		return "DadosPedido [idDadosPedido=" + idDadosPedido + ", pedidoCredenciamento=" + pedidoCredenciamento
-				+ ", jsonEnvasadora=" + jsonEnvasadora + ", jsonResponsavel=" + jsonResponsavel + ", jsonLicencas="
-				+ jsonLicencas + ", jsonProdutos=" + jsonProdutos + "]";
+	public String getJsonCampos() {
+		return jsonCampos;
+	}
+
+	public void setJsonCampos(String jsonCampos) {
+		this.jsonCampos = jsonCampos;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idDadosPedido, jsonEnvasadora, jsonLicencas, jsonProdutos, jsonResponsavel,
+		return Objects.hash(idDadosPedido, jsonCampos, jsonEnvasadora, jsonLicencas, jsonProdutos, jsonResponsavel,
 				pedidoCredenciamento);
 	}
 
@@ -117,11 +122,18 @@ public class DadosPedido {
 		if (getClass() != obj.getClass())
 			return false;
 		DadosPedido other = (DadosPedido) obj;
-		return Objects.equals(idDadosPedido, other.idDadosPedido)
+		return Objects.equals(idDadosPedido, other.idDadosPedido) && Objects.equals(jsonCampos, other.jsonCampos)
 				&& Objects.equals(jsonEnvasadora, other.jsonEnvasadora)
 				&& Objects.equals(jsonLicencas, other.jsonLicencas) && Objects.equals(jsonProdutos, other.jsonProdutos)
 				&& Objects.equals(jsonResponsavel, other.jsonResponsavel)
 				&& Objects.equals(pedidoCredenciamento, other.pedidoCredenciamento);
+	}
+
+	@Override
+	public String toString() {
+		return "DadosPedido [idDadosPedido=" + idDadosPedido + ", pedidoCredenciamento=" + pedidoCredenciamento
+				+ ", jsonEnvasadora=" + jsonEnvasadora + ", jsonResponsavel=" + jsonResponsavel + ", jsonLicencas="
+				+ jsonLicencas + ", jsonProdutos=" + jsonProdutos + ", jsonCampos=" + jsonCampos + "]";
 	}
 
 }

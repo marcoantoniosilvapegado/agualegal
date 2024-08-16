@@ -38,8 +38,9 @@ public class CampoFormulario {
 	@Column(name = "disponilizar_campo", length = 1)
 	private char disponibilizarCampo;
 
-	@Column(name = "status", length = 1)
-	private char status;
+	@ManyToOne
+	@JoinColumn(name = "status", foreignKey = @ForeignKey(name = "FK_STATUS"))
+	private TipoStatus status;
 
 	@ManyToOne
 	@JoinColumn(name = "id_tipo_analise", foreignKey = @ForeignKey(name = "FK_TIPO_ANALISE"))
@@ -50,12 +51,12 @@ public class CampoFormulario {
 	private TipoResposta tipoResposta;
 
 	public CampoFormulario() {
-		
+
 	}
 
-	public CampoFormulario(Long idCampoFormulario, String nomeCriterio, String descricaoCriterio,
-			String codigoCriterio, char campoObrigatorio, char disponibilizarCampo, char status,
-			TipoAnalise tipoAnalise, TipoResposta tipoResposta) {		
+	public CampoFormulario(Long idCampoFormulario, String nomeCriterio, String descricaoCriterio, String codigoCriterio,
+			char campoObrigatorio, char disponibilizarCampo, TipoStatus status, TipoAnalise tipoAnalise,
+			TipoResposta tipoResposta) {
 		this.idCampoFormulario = idCampoFormulario;
 		this.nomeCriterio = nomeCriterio;
 		this.descricaoCriterio = descricaoCriterio;
@@ -115,11 +116,11 @@ public class CampoFormulario {
 		this.disponibilizarCampo = disponibilizarCampo;
 	}
 
-	public char getStatus() {
+	public TipoStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(char status) {
+	public void setStatus(TipoStatus status) {
 		this.status = status;
 	}
 

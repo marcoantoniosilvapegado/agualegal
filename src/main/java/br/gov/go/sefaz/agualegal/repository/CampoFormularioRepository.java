@@ -12,7 +12,7 @@ import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 @Repository
 public interface CampoFormularioRepository extends JpaRepository<CampoFormulario, Long>{
 	
-	@Query(value = "select  c from CampoFormulario c where c.status = 'A'")
+	@Query(value = "select  c from CampoFormulario c where c.status.id = 1")
 	Optional<List<CampoFormulario>> findCamposAtivosFormulario();
 	
 	

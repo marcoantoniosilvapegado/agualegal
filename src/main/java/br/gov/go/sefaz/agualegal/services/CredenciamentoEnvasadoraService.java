@@ -1,7 +1,9 @@
 package br.gov.go.sefaz.agualegal.services;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ import br.gov.go.sefaz.agualegal.domain.DadosReponsavelPersistencia;
 import br.gov.go.sefaz.agualegal.domain.EnvasadoraPersistencia;
 import br.gov.go.sefaz.agualegal.domain.PreAnaliseResultado;
 import br.gov.go.sefaz.agualegal.domain.RespostaPreAnalise;
+import br.gov.go.sefaz.agualegal.dto.solicitacao.CampoPersistDTO;
 import br.gov.go.sefaz.agualegal.dto.solicitacao.DadosSolicitacaoDTO;
 import br.gov.go.sefaz.agualegal.exception.SolicitacaoCredenciamentoException;
 import br.gov.go.sefaz.agualegal.modelo.AnalisePedido;
+import br.gov.go.sefaz.agualegal.modelo.CampoFormulario;
 import br.gov.go.sefaz.agualegal.modelo.Credenciamento;
 import br.gov.go.sefaz.agualegal.modelo.DadosPedido;
 import br.gov.go.sefaz.agualegal.modelo.Envasadora;
@@ -30,6 +34,7 @@ import br.gov.go.sefaz.agualegal.modelo.StatusCredenciamento;
 import br.gov.go.sefaz.agualegal.modelo.TipoAgua;
 import br.gov.go.sefaz.agualegal.modelo.TipoAnalise;
 import br.gov.go.sefaz.agualegal.repository.AnalisePedidoRepository;
+import br.gov.go.sefaz.agualegal.repository.CampoFormularioRepository;
 import br.gov.go.sefaz.agualegal.repository.CredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.DadosPedidoRepository;
 import br.gov.go.sefaz.agualegal.repository.EnvasadoraRepository;
@@ -63,6 +68,7 @@ public class CredenciamentoEnvasadoraService {
 	private TipoAnaliseRepository tipoAnaliseRepository;
 	private MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository;
 	private MotivoIndeferimentoRepository motivoIndeferimentoRepository;
+	private CampoFormularioRepository campoFormularioRepository;
 
 	public CredenciamentoEnvasadoraService(EnvasadoraRepository envasadoraRepository,
 			TipoAguaRepository tipoAguaRepository, StatusCredenciamentoRepository statusCredenciamentoRepository,
@@ -72,7 +78,9 @@ public class CredenciamentoEnvasadoraService {
 			ValidacaoSolicitacaoCredenciamento validacaoSolicitacaoCredenciamento, PreAnaliseService preAnaliseService,
 			AnalisePedidoRepository analisePedidoRepository, TipoAnaliseRepository tipoAnaliseRepository,
 			MotivoIndeferimentoRepository motivoIndeferimentoRepository, 
-			MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository) {
+			MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository,
+			CampoFormularioRepository campoFormularioRepository
+			) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
 		this.tipoAguaRepository = tipoAguaRepository;
@@ -89,6 +97,7 @@ public class CredenciamentoEnvasadoraService {
 		this.motivoIndeferimentoRepository = motivoIndeferimentoRepository;
 		this.analisePedidoRepository = analisePedidoRepository;
 		this.motivoIndeferimentoAnaliseRepository = motivoIndeferimentoAnaliseRepository;
+		this.campoFormularioRepository = campoFormularioRepository;
 	}
 
 	@Transactional
@@ -210,7 +219,14 @@ public class CredenciamentoEnvasadoraService {
 		dadosPedido.setJsonProdutos(gson.toJson(dto.getListaProdutos()));// UtilsAguaLegal.toJson(dto.getListaProdutos()));
 
 		dadosPedido.setJsonLicencas(gson.toJson(dto.getListaLicencas()));
-
+		
+		List<CampoFormulario> listaCamposAtivos = 
+				this.campoFormularioRepository.findCamposAtivosFormulario().get();
+		List<CampoPersistDTO> listaCamposPersist = 
+				listaCamposAtivos.stream().map(item -> new CampoPersistDTO(item)).collect(Collectors.toList());
+		dadosPedido.setJsonCampos(   
+				UtilsAguaLegal.toJson(listaCamposPersist)
+				);		
 		return this.dadosPedidoRepository.save(dadosPedido);
 
 	}

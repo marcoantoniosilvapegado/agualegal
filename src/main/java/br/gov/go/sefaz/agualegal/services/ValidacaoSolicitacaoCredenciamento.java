@@ -62,12 +62,16 @@ public class ValidacaoSolicitacaoCredenciamento {
 				.collect(Collectors.toList()).get(0);
 		CampoFormulario campoTipoAgua = list.stream().filter(item -> item.getCodigoCriterio().equals("TIPOAGUA"))
 				.collect(Collectors.toList()).get(0);
-
-		if (UtilsAguaLegal.isEmpty(dto.getObservacao())
-				&& (campoObservacao != null && campoObservacao.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Observação");
-		}
-
+		
+		if(campoObservacao.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getObservacao())
+					&& (campoObservacao != null && campoObservacao.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Observação");
+			}
+		}else {
+			dto.setObservacao(null);
+		}		
+				
 		if (UtilsAguaLegal.isEmpty(dto.getTipoAgua())) {
 			if (campoTipoAgua != null && campoTipoAgua.getCampoObrigatorio() == 'S') {
 				errors.addError("Tipo de água", "Campo não informado");
@@ -82,7 +86,7 @@ public class ValidacaoSolicitacaoCredenciamento {
 	}
 
 	private void validaCamposFormulario(DadosSolicitacaoDTO dto, ValidationError errors) {
-		List<CampoFormulario> list = campoFormularioRepository.findCamposAtivosFormulario().get();
+		List<CampoFormulario> list = campoFormularioRepository.findAll();
 
 		this.validaCamposCadastroEnvasadora(dto, errors, list);
 		this.validaCamposResponsavelEnvasadora(dto, errors, list);
@@ -113,58 +117,81 @@ public class ValidacaoSolicitacaoCredenciamento {
 		CampoFormulario numeroLicencaMineral = list.stream()
 				.filter(item -> item.getCodigoCriterio().equals("NUMEROLICENCAMINERAL")).collect(Collectors.toList())
 				.get(0);
-
-		if (dto.getLicencaVigilancia().getEmissorLicenca() == null
-				&& (emissorLicencaSanitaria != null && emissorLicencaSanitaria.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Emissor licença sanitária");
-		} else {
-			Optional<EmissorLicenca> emissorLicenca = this.emissorLicencaRepository
-					.findById(dto.getLicencaVigilancia().getEmissorLicenca());
-			if (emissorLicenca.isEmpty()) {
-				errors.addError("Emissor não identificado", "Emissor da licença sanitária");
-			}
-
-		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getLicencaVigilancia().getNumero())
-				&& (numeroLicencaSanitaria != null && numeroLicencaSanitaria.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Número licença sanitária");
-		}
-
-		if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaVigilancia().getImagem())) {
-			if (imagemLicencaSanitaria != null && imagemLicencaSanitaria.getCampoObrigatorio() == 'S') {
-				errors.addError("Campo não informado", "Imagem da licença sanitária");
-			}
-		} else {
-			if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaVigilancia().getImagem()).equals("PDF")) {
-				errors.addError("Formato do campo não informado corretamente", "Imagem da licença sanitária");
+		
+		if(emissorLicencaSanitaria.getStatus().getId()==1) {
+			if (dto.getLicencaVigilancia().getEmissorLicenca() == null
+					&& (emissorLicencaSanitaria != null && emissorLicencaSanitaria.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Emissor licença sanitária");
 			} else {
-				if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaVigilancia().getImagem(), true)) {
-					errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença sanitária");
+				Optional<EmissorLicenca> emissorLicenca = this.emissorLicencaRepository
+						.findById(dto.getLicencaVigilancia().getEmissorLicenca());
+				if (emissorLicenca.isEmpty()) {
+					errors.addError("Emissor não identificado", "Emissor da licença sanitária");
 				}
 			}
+		}else {
+			dto.getLicencaVigilancia().setEmissorLicenca(null);
 		}
-
-		/* Validação feita apenas se o tipo água não for água de sais */
-		if (!dto.getTipoAgua().equals("2")) {
-			if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaMineracao().getImagem())) {
-				if (imagemLicencaMineral != null && imagemLicencaMineral.getCampoObrigatorio() == 'S') {
-					errors.addError("Campo não informado", "Imagem da licença de mineração");
+		
+		if(numeroLicencaSanitaria.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getLicencaVigilancia().getNumero())
+					&& (numeroLicencaSanitaria != null && numeroLicencaSanitaria.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Número licença sanitária");
+			}
+		}else {
+			dto.getLicencaVigilancia().setNumero(null);
+		}
+		
+		if(imagemLicencaSanitaria.getStatus().getId()==1) {
+			if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaVigilancia().getImagem())) {
+				if (imagemLicencaSanitaria != null && imagemLicencaSanitaria.getCampoObrigatorio() == 'S') {
+					errors.addError("Campo não informado", "Imagem da licença sanitária");
 				}
 			} else {
-				if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaMineracao().getImagem()).equals("PDF")) {
-					errors.addError("Formato do campo não informado corretamente", "Imagem da licença mineração");
+				if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaVigilancia().getImagem()).equals("PDF")) {
+					errors.addError("Formato do campo não informado corretamente", "Imagem da licença sanitária");
 				} else {
-					if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaMineracao().getImagem(), true)) {
-						errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença de mineração");
+					if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaVigilancia().getImagem(), true)) {
+						errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença sanitária");
 					}
 				}
 			}
+		}else {
+			dto.getLicencaVigilancia().setImagem(null);
+		}
 
-			if (UtilsAguaLegal.isEmpty(dto.getLicencaMineracao().getNumero())
-					&& (numeroLicencaMineral != null && numeroLicencaMineral.getCampoObrigatorio() == 'S')) {
-				errors.addError("Campo não informado", "Número licença mineração");
+		
+
+		/* Validação feita apenas se o tipo água não for água de sais */
+		
+		if (!dto.getTipoAgua().equals("2")) {
+			
+			if(imagemLicencaMineral.getStatus().getId()==1) {
+				if (!UtilsAguaLegal.isNotEmpty(dto.getLicencaMineracao().getImagem())) {
+					if (imagemLicencaMineral != null && imagemLicencaMineral.getCampoObrigatorio() == 'S') {
+						errors.addError("Campo não informado", "Imagem da licença de mineração");
+					}
+				} else {
+					if (!UtilsAguaLegal.detectarExtensaoConteudo(dto.getLicencaMineracao().getImagem()).equals("PDF")) {
+						errors.addError("Formato do campo não informado corretamente", "Imagem da licença mineração");
+					} else {
+						if (!UtilsAguaLegal.verificaTamanhoImagemValido(dto.getLicencaMineracao().getImagem(), true)) {
+							errors.addError("Tamanho limite de 4 MB ultrapassado", "Imagem da licença de mineração");
+						}
+					}
+				}
+			}else {
+				dto.getLicencaMineracao().setImagem(null);
 			}
+			
+			if(numeroLicencaMineral.getStatus().getId()==1) {
+				if (UtilsAguaLegal.isEmpty(dto.getLicencaMineracao().getNumero())
+						&& (numeroLicencaMineral != null && numeroLicencaMineral.getCampoObrigatorio() == 'S')) {
+					errors.addError("Campo não informado", "Número licença mineração");
+				}
+			}else {
+				dto.getLicencaMineracao().setNumero(null);
+			}			
 		}
 	}
 
@@ -185,26 +212,43 @@ public class ValidacaoSolicitacaoCredenciamento {
 		CampoFormulario coordenadasEnvase = list.stream()
 				.filter(item -> item.getCodigoCriterio().equals("COORDENADASENVASE")).collect(Collectors.toList())
 				.get(0);
-
-		if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getEnderecoEnvasador())
-				&& (enderecoEnvasadora != null && enderecoEnvasadora.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Endereço envasadora");
+		
+		if(enderecoEnvasadora.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getEnderecoEnvasador())
+					&& (enderecoEnvasadora != null && enderecoEnvasadora.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Endereço envasadora");
+			}
+		}else {
+			dto.getEnderecoDTO().setEnderecoEnvasador(null);
 		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getCoordenadasEnvasador())
-				&& (coordenadasEnvasadora != null && coordenadasEnvasadora.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Coordenadas envasadora");
+		
+		if(coordenadasEnvasadora.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getCoordenadasEnvasador())
+					&& (coordenadasEnvasadora != null && coordenadasEnvasadora.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Coordenadas envasadora");
+			}
+		}else {
+			dto.getEnderecoDTO().setCoordenadasEnvasador(null);
 		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getEnderecoEnvase())
-				&& (enderecoEnvase != null && enderecoEnvase.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Endereço envase");
+		
+		if(enderecoEnvase.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getEnderecoEnvase())
+					&& (enderecoEnvase != null && enderecoEnvase.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Endereço envase");
+			}
+		}else {
+			dto.getEnderecoDTO().setEnderecoEnvase(null);
 		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getCoordenadasEnvase())
-				&& (coordenadasEnvase != null && coordenadasEnvase.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Coordenadas envase");
+		
+		if(coordenadasEnvase.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getEnderecoDTO().getCoordenadasEnvase())
+					&& (coordenadasEnvase != null && coordenadasEnvase.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Coordenadas envase");
+			}
+		}else {
+			dto.getEnderecoDTO().setCoordenadasEnvase(null);
 		}
+		
 
 	}
 
@@ -227,42 +271,62 @@ public class ValidacaoSolicitacaoCredenciamento {
 		CampoFormulario campoTelefoneResponsavel = list.stream()
 				.filter(item -> item.getCodigoCriterio().equals("TELEFONERESPONSAVEL")).collect(Collectors.toList())
 				.get(0);
-
-		if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getNomeResponsavel())
-				&& (campoNomeResponsavel != null && campoNomeResponsavel.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Nome Responsável");
-		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getCpfResponsavel())) {
-			if (campoCpfResponsavel != null && campoCpfResponsavel.getCampoObrigatorio() == 'S') {
-				errors.addError("Campo não informado", "CPF Responsável");
+		
+		if(campoNomeResponsavel.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getNomeResponsavel())
+					&& (campoNomeResponsavel != null && campoNomeResponsavel.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Nome Responsável");
 			}
-		} else {
-			if (!UtilsAguaLegal.verificaCpfValido(dto.getResponsavel().getCpfResponsavel())) {
-				errors.addError("Conteúdo do campo inválido", "CPF Responsável");
+		}else {
+			dto.getResponsavel().setNomeResponsavel(null);		
+		}
+		
+		if(campoCpfResponsavel.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getCpfResponsavel())) {
+				if (campoCpfResponsavel != null && campoCpfResponsavel.getCampoObrigatorio() == 'S') {
+					errors.addError("Campo não informado", "CPF Responsável");
+				}
+			} else {
+				if (!UtilsAguaLegal.verificaCpfValido(dto.getResponsavel().getCpfResponsavel())) {
+					errors.addError("Conteúdo do campo inválido", "CPF Responsável");
+				}
 			}
+		}else {
+			dto.getResponsavel().setCpfResponsavel(null);
+		}		
+		
+		if(campoEmailResponsavel.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getEmailResponsavel())) {
+				if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getEmailResponsavel())
+						&& (campoEmailResponsavel != null && campoEmailResponsavel.getCampoObrigatorio() == 'S')) {
+					errors.addError("Campo não informado", "Email Responsável");
+				}
+			} else {
+				if (!UtilsAguaLegal.verificaEmailValido(dto.getResponsavel().getEmailResponsavel())) {
+					errors.addError("Conteúdo do campo inválido", "Email Responsável");
+				}
+			}
+		}else {
+			dto.getResponsavel().setEmailResponsavel(null);
+		}
+		
+		if(campoRgResponsavel.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getRgResponsavel())
+					&& (campoRgResponsavel != null && campoRgResponsavel.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "RG Responsável");
+			}
+		}else {
+			dto.getResponsavel().setRgResponsavel(null);
 		}
 
-		if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getEmailResponsavel())) {
-			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getEmailResponsavel())
-					&& (campoEmailResponsavel != null && campoEmailResponsavel.getCampoObrigatorio() == 'S')) {
-				errors.addError("Campo não informado", "Email Responsável");
+		if(campoTelefoneResponsavel.getStatus().getId()==1) {
+			if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getTelefoneResponsavel())
+					&& (campoTelefoneResponsavel != null && campoTelefoneResponsavel.getCampoObrigatorio() == 'S')) {
+				errors.addError("Campo não informado", "Telefone Responsável");
 			}
-		} else {
-			if (!UtilsAguaLegal.verificaEmailValido(dto.getResponsavel().getEmailResponsavel())) {
-				errors.addError("Conteúdo do campo inválido", "Email Responsável");
-			}
-		}
-
-		if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getRgResponsavel())
-				&& (campoRgResponsavel != null && campoRgResponsavel.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "RG Responsável");
-		}
-		if (UtilsAguaLegal.isEmpty(dto.getResponsavel().getTelefoneResponsavel())
-				&& (campoTelefoneResponsavel != null && campoTelefoneResponsavel.getCampoObrigatorio() == 'S')) {
-			errors.addError("Campo não informado", "Telefone Responsável");
-		}
-
+		}else {
+			dto.getResponsavel().setTelefoneResponsavel(null);
+		}		
 	}
 
 	private void validaCamposCadastroEnvasadora(DadosSolicitacaoDTO dto, ValidationError errors,

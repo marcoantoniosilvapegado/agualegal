@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -22,6 +25,10 @@ public class TipoAnalise {
 
 	@Column(name = "tipo_analise", nullable = false, length = 50, unique = true)
 	private String tipoAnalise;
+
+	@ManyToOne
+	@JoinColumn(name = "id_status", nullable = false)
+	private TipoStatus status;
 
 	public TipoAnalise() {
 
@@ -43,14 +50,17 @@ public class TipoAnalise {
 		this.tipoAnalise = tipoAnalise;
 	}
 
-	@Override
-	public String toString() {
-		return "TipoAnalise [idTipoAnalise=" + idTipoAnalise + ", tipoAnalise=" + tipoAnalise + "]";
+	public TipoStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TipoStatus status) {
+		this.status = status;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(idTipoAnalise, tipoAnalise);
+		return Objects.hash(idTipoAnalise, status, tipoAnalise);
 	}
 
 	@Override
@@ -62,7 +72,14 @@ public class TipoAnalise {
 		if (getClass() != obj.getClass())
 			return false;
 		TipoAnalise other = (TipoAnalise) obj;
-		return Objects.equals(idTipoAnalise, other.idTipoAnalise) && Objects.equals(tipoAnalise, other.tipoAnalise);
+		return Objects.equals(idTipoAnalise, other.idTipoAnalise) && Objects.equals(status, other.status)
+				&& Objects.equals(tipoAnalise, other.tipoAnalise);
+	}
+
+	@Override
+	public String toString() {
+		return "TipoAnalise [idTipoAnalise=" + idTipoAnalise + ", tipoAnalise=" + tipoAnalise + ", status=" + status
+				+ "]";
 	}
 
 }
