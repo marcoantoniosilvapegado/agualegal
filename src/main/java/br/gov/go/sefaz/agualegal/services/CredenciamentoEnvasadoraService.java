@@ -29,6 +29,7 @@ import br.gov.go.sefaz.agualegal.modelo.Grafica;
 import br.gov.go.sefaz.agualegal.modelo.MotivoIndeferimento;
 import br.gov.go.sefaz.agualegal.modelo.MotivoIndeferimentoAnalise;
 import br.gov.go.sefaz.agualegal.modelo.PedidoCredenciamento;
+import br.gov.go.sefaz.agualegal.modelo.SituacaoCadSefaz;
 import br.gov.go.sefaz.agualegal.modelo.StatusAnalise;
 import br.gov.go.sefaz.agualegal.modelo.StatusCredenciamento;
 import br.gov.go.sefaz.agualegal.modelo.TipoAgua;
@@ -42,6 +43,7 @@ import br.gov.go.sefaz.agualegal.repository.GraficaRepository;
 import br.gov.go.sefaz.agualegal.repository.MotivoIndeferimentoAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.MotivoIndeferimentoRepository;
 import br.gov.go.sefaz.agualegal.repository.PedidoCredenciamentoRepository;
+import br.gov.go.sefaz.agualegal.repository.SituacaoCadSefazRepository;
 import br.gov.go.sefaz.agualegal.repository.StatusAnaliseRepository;
 import br.gov.go.sefaz.agualegal.repository.StatusCredenciamentoRepository;
 import br.gov.go.sefaz.agualegal.repository.TipoAguaRepository;
@@ -69,6 +71,7 @@ public class CredenciamentoEnvasadoraService {
 	private MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository;
 	private MotivoIndeferimentoRepository motivoIndeferimentoRepository;
 	private CampoFormularioRepository campoFormularioRepository;
+	private SituacaoCadSefazRepository situacaoCadSefazRepository;
 
 	public CredenciamentoEnvasadoraService(EnvasadoraRepository envasadoraRepository,
 			TipoAguaRepository tipoAguaRepository, StatusCredenciamentoRepository statusCredenciamentoRepository,
@@ -79,7 +82,8 @@ public class CredenciamentoEnvasadoraService {
 			AnalisePedidoRepository analisePedidoRepository, TipoAnaliseRepository tipoAnaliseRepository,
 			MotivoIndeferimentoRepository motivoIndeferimentoRepository, 
 			MotivoIndeferimentoAnaliseRepository motivoIndeferimentoAnaliseRepository,
-			CampoFormularioRepository campoFormularioRepository
+			CampoFormularioRepository campoFormularioRepository,
+			SituacaoCadSefazRepository situacaoCadSefazRepository
 			) {
 		super();
 		this.envasadoraRepository = envasadoraRepository;
@@ -98,6 +102,7 @@ public class CredenciamentoEnvasadoraService {
 		this.analisePedidoRepository = analisePedidoRepository;
 		this.motivoIndeferimentoAnaliseRepository = motivoIndeferimentoAnaliseRepository;
 		this.campoFormularioRepository = campoFormularioRepository;
+		this.situacaoCadSefazRepository = situacaoCadSefazRepository;
 	}
 
 	@Transactional
@@ -140,7 +145,7 @@ public class CredenciamentoEnvasadoraService {
 		AnalisePedido analise = persistenciaPedidoPreAnalise(pedido, preAnalise);	
 		MotivoIndeferimentoAnalise motivo = persistenciaMotivoIndeferimentoAnalise(analise, preAnalise);
 		
-		persistenciaDadosPedido(dto, pedido, envasadora);
+		persistenciaDadosPedido(dto, pedido, envasadora, preAnalise);
 
 		if (!preAnalise.isDeferido()) {
 			return new ResponseEntity<RespostaPreAnalise>(
@@ -200,7 +205,7 @@ public class CredenciamentoEnvasadoraService {
 	}
 
 	private DadosPedido persistenciaDadosPedido(DadosSolicitacaoDTO dto, PedidoCredenciamento pedido,
-			Envasadora envasadora) {
+			Envasadora envasadora, PreAnaliseResultado preAnaliseResultado) {
 		DadosPedido dadosPedido = new DadosPedido();
 		DadosReponsavelPersistencia dadosReponsavelPersistencia;
 		dadosPedido.setPedidoCredenciamento(pedido);
@@ -216,7 +221,7 @@ public class CredenciamentoEnvasadoraService {
 
 		Gson gson = new GsonBuilder().registerTypeAdapter(byte[].class, new ByteArrayToBase64TypeAdapter()).create();
 
-		dadosPedido.setJsonProdutos(gson.toJson(dto.getListaProdutos()));// UtilsAguaLegal.toJson(dto.getListaProdutos()));
+		dadosPedido.setJsonProdutos(gson.toJson(dto.getListaProdutos()));
 
 		dadosPedido.setJsonLicencas(gson.toJson(dto.getListaLicencas()));
 		
@@ -227,6 +232,14 @@ public class CredenciamentoEnvasadoraService {
 		dadosPedido.setJsonCampos(   
 				UtilsAguaLegal.toJson(listaCamposPersist)
 				);		
+		/*Se possuir a situação fiscal vinda da sefaz, persistir*/
+		if(preAnaliseResultado.getSituacaoFiscalSefaz()!= null) {
+			Optional<SituacaoCadSefaz> situacaoSefaz = 
+					this.situacaoCadSefazRepository.findById(preAnaliseResultado.getSituacaoFiscalSefaz());
+			if(situacaoSefaz.isPresent()) {
+				dadosPedido.setSituacaoCadSefaz(situacaoSefaz.get());
+			}
+		}
 		return this.dadosPedidoRepository.save(dadosPedido);
 
 	}

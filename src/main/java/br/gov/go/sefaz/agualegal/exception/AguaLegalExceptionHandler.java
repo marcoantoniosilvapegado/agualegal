@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import br.gov.go.sefaz.agualegal.domain.Resposta;
 import br.gov.go.sefaz.agualegal.domain.RespostaPadrao;
 import br.gov.go.sefaz.agualegal.domain.RespostaPreAnalise;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +33,8 @@ public class AguaLegalExceptionHandler {
 	}	
 	
 	@ExceptionHandler(TokenGraficaInvalidoException.class)
-	public ResponseEntity<RespostaPadrao> validaTokenGrafica(TokenGraficaInvalidoException e, HttpServletRequest request){
-		RespostaPadrao erro = new RespostaPadrao(e.getMessage(), e.getCodigo(), false);		
+	public ResponseEntity<Resposta> validaTokenGrafica(TokenGraficaInvalidoException e, HttpServletRequest request){
+		Resposta erro = new Resposta(e.getMessage(), false);		
 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(erro);
 	}
 	

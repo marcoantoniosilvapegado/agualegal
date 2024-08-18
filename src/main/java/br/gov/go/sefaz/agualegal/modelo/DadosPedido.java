@@ -47,6 +47,10 @@ public class DadosPedido {
 	@Column(name = "json_campos_ativos")
 	private String jsonCampos;
 
+	@ManyToOne
+	@JoinColumn(name = "ID_SITUACAOCAD_SEFAZ", nullable = true)
+	private SituacaoCadSefaz situacaoCadSefaz;
+
 	public DadosPedido() {
 
 	}
@@ -107,10 +111,26 @@ public class DadosPedido {
 		this.jsonCampos = jsonCampos;
 	}
 
+	public SituacaoCadSefaz getSituacaoCadSefaz() {
+		return situacaoCadSefaz;
+	}
+
+	public void setSituacaoCadSefaz(SituacaoCadSefaz situacaoCadSefaz) {
+		this.situacaoCadSefaz = situacaoCadSefaz;
+	}
+
+	@Override
+	public String toString() {
+		return "DadosPedido [idDadosPedido=" + idDadosPedido + ", pedidoCredenciamento=" + pedidoCredenciamento
+				+ ", jsonEnvasadora=" + jsonEnvasadora + ", jsonResponsavel=" + jsonResponsavel + ", jsonLicencas="
+				+ jsonLicencas + ", jsonProdutos=" + jsonProdutos + ", jsonCampos=" + jsonCampos + ", situacaoCadSefaz="
+				+ situacaoCadSefaz + "]";
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(idDadosPedido, jsonCampos, jsonEnvasadora, jsonLicencas, jsonProdutos, jsonResponsavel,
-				pedidoCredenciamento);
+				pedidoCredenciamento, situacaoCadSefaz);
 	}
 
 	@Override
@@ -126,14 +146,8 @@ public class DadosPedido {
 				&& Objects.equals(jsonEnvasadora, other.jsonEnvasadora)
 				&& Objects.equals(jsonLicencas, other.jsonLicencas) && Objects.equals(jsonProdutos, other.jsonProdutos)
 				&& Objects.equals(jsonResponsavel, other.jsonResponsavel)
-				&& Objects.equals(pedidoCredenciamento, other.pedidoCredenciamento);
-	}
-
-	@Override
-	public String toString() {
-		return "DadosPedido [idDadosPedido=" + idDadosPedido + ", pedidoCredenciamento=" + pedidoCredenciamento
-				+ ", jsonEnvasadora=" + jsonEnvasadora + ", jsonResponsavel=" + jsonResponsavel + ", jsonLicencas="
-				+ jsonLicencas + ", jsonProdutos=" + jsonProdutos + ", jsonCampos=" + jsonCampos + "]";
+				&& Objects.equals(pedidoCredenciamento, other.pedidoCredenciamento)
+				&& Objects.equals(situacaoCadSefaz, other.situacaoCadSefaz);
 	}
 
 }

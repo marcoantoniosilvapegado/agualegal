@@ -1,5 +1,6 @@
 package br.gov.go.sefaz.agualegal.repository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -46,4 +47,31 @@ public class ConsultaBaseSefazRepository {
 		Integer queryForObject = jdbcTemplate.queryForObject(sql.toString(), Integer.class);
 		return queryForObject > 0;
 	}
+
+	public Long retornaSituacaoFiscal2(String ie) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT TC.SITUACAO_FISCAL FROM TAB_CADASTRO");
+		sql.append(" TC ");
+		sql.append("WHERE TC.IE = ").append(ie);		
+		try {
+			return jdbcTemplate.queryForObject(sql.toString(), Long.class);
+		} catch (EmptyResultDataAccessException e) {
+			return 9L; 
+		}
+	};
+
+	public Long retornaSituacaoFiscal(String ie) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT TO_CHAR(RG.RGE_TSC_SIT_CADASTRAL) FROM TAXMAOC.RUC_GENERAL");
+		sql.append(pathDBLINK);
+		sql.append(" RG ");
+		sql.append("WHERE RG.RGE_RUC = ").append(ie);
+		
+		try {
+			return jdbcTemplate.queryForObject(sql.toString(), Long.class);
+		} catch (EmptyResultDataAccessException e) {
+			return 9L; 
+		}
+	};
+
 }

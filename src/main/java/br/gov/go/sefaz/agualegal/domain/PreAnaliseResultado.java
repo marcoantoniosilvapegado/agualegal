@@ -2,14 +2,18 @@ package br.gov.go.sefaz.agualegal.domain;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PreAnaliseResultado {
 
 	private boolean deferido;
 
 	private Integer idMotivoIndeferimento;
 
+	private Long situacaoFiscalSefaz;
+
 	public PreAnaliseResultado() {
-		
+
 	}
 
 	public PreAnaliseResultado(boolean deferido) {
@@ -17,10 +21,23 @@ public class PreAnaliseResultado {
 		this.deferido = deferido;
 	}
 
+	public PreAnaliseResultado(boolean deferido, Long situacaoFiscalSefaz) {
+		super();
+		this.deferido = deferido;
+		this.situacaoFiscalSefaz = situacaoFiscalSefaz;
+	}
+
 	public PreAnaliseResultado(boolean deferido, Integer idMotivoIndeferimento) {
 		super();
 		this.deferido = deferido;
 		this.idMotivoIndeferimento = idMotivoIndeferimento;
+	}
+
+	public PreAnaliseResultado(boolean deferido, Integer idMotivoIndeferimento, Long situacaoFiscalSefaz) {
+		super();
+		this.deferido = deferido;
+		this.idMotivoIndeferimento = idMotivoIndeferimento;
+		this.situacaoFiscalSefaz = situacaoFiscalSefaz;
 	}
 
 	public boolean isDeferido() {
@@ -39,14 +56,23 @@ public class PreAnaliseResultado {
 		this.idMotivoIndeferimento = idMotivoIndeferimento;
 	}
 
+	public Long getSituacaoFiscalSefaz() {
+		return situacaoFiscalSefaz;
+	}
+
+	public void setSituacaoFiscalSefaz(Long situacaoFiscalSefaz) {
+		this.situacaoFiscalSefaz = situacaoFiscalSefaz;
+	}
+
 	@Override
 	public String toString() {
-		return "PreAnaliseResultado [deferido=" + deferido + ", idMotivoIndeferimento=" + idMotivoIndeferimento + "]";
+		return "PreAnaliseResultado [deferido=" + deferido + ", idMotivoIndeferimento=" + idMotivoIndeferimento
+				+ ", situacaoFiscalSefaz=" + situacaoFiscalSefaz + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(deferido, idMotivoIndeferimento);
+		return Objects.hash(deferido, idMotivoIndeferimento, situacaoFiscalSefaz);
 	}
 
 	@Override
@@ -58,7 +84,8 @@ public class PreAnaliseResultado {
 		if (getClass() != obj.getClass())
 			return false;
 		PreAnaliseResultado other = (PreAnaliseResultado) obj;
-		return deferido == other.deferido && Objects.equals(idMotivoIndeferimento, other.idMotivoIndeferimento);
+		return deferido == other.deferido && Objects.equals(idMotivoIndeferimento, other.idMotivoIndeferimento)
+				&& Objects.equals(situacaoFiscalSefaz, other.situacaoFiscalSefaz);
 	}
 
 }
